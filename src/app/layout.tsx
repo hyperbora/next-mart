@@ -26,57 +26,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}
       >
-        <div className="flex flex-col min-h-screen">
-          <header className="bg-black shadow">
-            <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Next-Mart</h1>
-              <nav>
-                <ul className="flex space-x-6">
-                  <li>
-                    <Link
-                      href="/"
-                      className="text-white hover:text-blue-600 transition"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/about"
-                      className="text-gray-700 hover:text-blue-600 transition"
-                    >
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/products"
-                      className="text-gray-700 hover:text-blue-600 transition"
-                    >
-                      Products
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/contact"
-                      className="text-gray-700 hover:text-blue-600 transition"
-                    >
-                      Contact
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </header>
-
-          <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
-
-          <footer className="bg-white border-t py-4">
-            <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-              &copy; 2025 My Shopping Mall. All Rights Reserved.
-            </div>
-          </footer>
-        </div>
+        <h1 className="text-4xl text-indigo-800 font-bold my-2">Next-Mart</h1>
+        {/* 공통 메뉴 준비 */}
+        <ul className="flex bg-black mb-4 pl-2">
+          <li className="block text-white px-4 py-2 my-1 hover:bg-gray-100 rounded">
+            <Link className="no-underline text-blue-300" href="/">
+              Home
+            </Link>
+          </li>
+          <li className="block text-white px-4 py-2 my-1 hover:bg-gray-100 rounded">
+            <Link className="no-underline text-blue-300" href="/about">
+              about
+            </Link>
+          </li>
+        </ul>
+        <div className="ml-2">{children}</div>
+        <footer className="bg-white border-t py-4">
+          <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+            &copy; 2025 My Shopping Mall. All Rights Reserved.
+          </div>
+        </footer>
       </body>
     </html>
   );
