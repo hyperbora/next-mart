@@ -1,4 +1,4 @@
-import { ProductCardProps } from '@/app/types/global';
+import { ProductCardProps } from '@/types/global';
 import Link from 'next/link';
 
 
