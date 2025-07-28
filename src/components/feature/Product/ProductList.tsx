@@ -1,8 +1,8 @@
+import { ProductCardProps } from "@/types/global";
 import ProductCard from "./ProductCard";
-import products from "@/data.json"; 
 
-export default function ProductList() {
-  
+export default function ProductList(prop: { products: ProductCardProps[] }) {
+  const { products } = prop;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {products.map((p) => (
