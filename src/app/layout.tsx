@@ -46,7 +46,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {/* 데스크탑 메뉴 */}
               <div className="hidden md:flex space-x-6 w-50 justify-between">
                 <Link href="/" className="hover:text-blue-500">홈</Link>
-                <Link href="/products" className="hover:text-blue-500">상품</Link>
                 <Link href="/about" className="hover:text-blue-500">소개</Link>
                 <Link href="/contact" className="hover:text-blue-500">문의</Link>
               </div>
@@ -55,7 +54,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* 모바일 메뉴 드롭다운 */}
             <div className="peer-checked:block hidden md:hidden mt-2 space-y-2 pb-4">
               <Link href="/" className="block hover:text-blue-500">홈</Link>
-              <Link href="/products" className="block hover:text-blue-500">상품</Link>
               <Link href="/about" className="block hover:text-blue-500">소개</Link>
               <Link href="/contact" className="block hover:text-blue-500">문의</Link>
             </div>
