@@ -1,6 +1,7 @@
 import ProductList from "@/components/feature/Product/ProductList";
-import data from "@/data.json";
+import { getAllProducts } from "@/repository/productRepository";
 
-export default function Home() {
-  return <>{<ProductList products={data} />}</>;
+export default async function Home() {
+  const products = await getAllProducts();
+  return <>{<ProductList products={products} />}</>;
 }

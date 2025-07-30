@@ -1,8 +1,5 @@
-export type ProductCardProps = {
+export type Product = {
   id: string;
   name: string;
   price: number;
-};
-export type ProductListProps = {
-  products: ProductCardProps[];
 };
