@@ -2,11 +2,12 @@ import { getProductById } from "@/repository/productRepository";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function Product({ params }: Props) {
-  const product = await getProductById(params.id);
+  const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.id);
 
   if (!product) {
     return notFound();

@@ -7,7 +7,7 @@
     {
         "id": "2",
         "name": "milk",
-        "price": 2000
+        "price": 1900
     },
     {
         "id": "3",
@@ -17,6 +17,11 @@
     {
         "id": "4",
         "name": "soda",
-        "price": 2000
+        "price": 1000
+    },
+    {
+        "id": "5",
+        "name": "bread",
+        "price": 1500
     }
 ]
