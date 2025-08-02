@@ -1,25 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-
-function getMenu() {
-  const menuItems = [
-    { href: "/login", label: "로그인" },
-    { href: "/signup", label: "회원가입" },
-    { href: "/mypage", label: "마이페이지" },
-    { href: "/cart", label: "장바구니" },
-  ];
-  return menuItems.map((item) => (
-    <Link
-      key={item.href}
-      href={item.href}
-      className="hover:text-green-600 transition-colors cursor-pointer"
-    >
-      {item.label}
-    </Link>
-  ));
-}
+import { useState, useEffect, useMemo } from "react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +37,23 @@ export default function Header() {
     };
   }, [isOpen]);
 
+  const menus = useMemo(() => {
+    return [
+      { href: "/login", label: "로그인" },
+      { href: "/signup", label: "회원가입" },
+      { href: "/mypage", label: "마이페이지" },
+      { href: "/cart", label: "장바구니" },
+    ].map((item) => (
+      <Link
+        key={item.href}
+        href={item.href}
+        className="hover:text-green-600 transition-colors cursor-pointer"
+      >
+        {item.label}
+      </Link>
+    ));
+  }, []);
+
   return (
     <header className="bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
@@ -66,9 +65,7 @@ export default function Header() {
           placeholder="검색어를 입력하세요"
           className="border rounded-md px-3 py-2 w-40 sm:w-64 md:w-96"
         />
-        <nav className="hidden md:flex space-x-4 text-gray-700">
-          {getMenu()}
-        </nav>
+        <nav className="hidden md:flex space-x-4 text-gray-700">{menus}</nav>
         <button
           className="md:hidden p-2 rounded hover:bg-gray-100"
           onClick={() => setIsOpen(!isOpen)}
@@ -97,7 +94,7 @@ export default function Header() {
         onClick={() => setIsOpen(false)}
       />
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6 space-y-4 transform transition-transform transition-opacity duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6 space-y-4 transform transition-opacity duration-300 ease-in-out ${
           isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         }`}
       >
@@ -107,7 +104,7 @@ export default function Header() {
         >
           닫기 ✕
         </button>
-        <nav className="flex flex-col space-y-4 text-gray-700">{getMenu()}</nav>
+        <nav className="flex flex-col space-y-4 text-gray-700">{menus}</nav>
       </div>
     </header>
   );
