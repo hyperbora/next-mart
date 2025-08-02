@@ -5,7 +5,7 @@ export default function Header() {
     <header className="bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
         <div className="text-2xl font-bold text-green-600">
-          <Link href="/">NextMarket</Link>
+          <Link href="/">NMart</Link>
         </div>
         <input
           type="text"

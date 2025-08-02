@@ -14,7 +14,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="fixed top-0 left-0 w-full z-50">
           <Header />
         </div>
-        <main className="flex-1 bg-gray-50">{children}</main>
+        <main className="flex-1 bg-gray-50 px-2 sm:px-4 md:px-6">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
