@@ -18,6 +18,12 @@
     display: none;
   }
 }
+/* 메뉴 열릴 때 본문을 흐리게 & 살짝 축소 */
+body.menu-open #__next {
+  transition: filter 0.3s ease, transform 0.3s ease;
+  filter: blur(2px);
+  transform: scale(0.98);
+}
 @tailwind utilities;
 
 :root {

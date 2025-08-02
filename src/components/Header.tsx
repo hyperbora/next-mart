@@ -1,6 +1,60 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
+function getMenu() {
+  const menuItems = [
+    { href: "/login", label: "로그인" },
+    { href: "/signup", label: "회원가입" },
+    { href: "/mypage", label: "마이페이지" },
+    { href: "/cart", label: "장바구니" },
+  ];
+  return menuItems.map((item) => (
+    <Link
+      key={item.href}
+      href={item.href}
+      className="hover:text-green-600 transition-colors cursor-pointer"
+    >
+      {item.label}
+    </Link>
+  ));
+}
 
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
+    // 메뉴 오픈 시 body overflow hidden 및 blur 효과
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.classList.add("menu-open");
+    } else {
+      timeoutId = setTimeout(() => {
+        document.body.style.overflow = "";
+        document.body.classList.remove("menu-open");
+      }, 300);
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.body.style.overflow = "";
+      document.body.classList.remove("menu-open");
+    };
+  }, [isOpen]);
+
   return (
     <header className="bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
@@ -13,12 +67,12 @@ export default function Header() {
           className="border rounded-md px-3 py-2 w-40 sm:w-64 md:w-96"
         />
         <nav className="hidden md:flex space-x-4 text-gray-700">
-          <Link href="/signin">로그인</Link>
-          <Link href="/signup">회원가입</Link>
-          <Link href="/mypage">마이페이지</Link>
-          <Link href="/cart">장바구니</Link>
+          {getMenu()}
         </nav>
-        <button className="md:hidden p-2 rounded hover:bg-gray-100">
+        <button
+          className="md:hidden p-2 rounded hover:bg-gray-100"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -34,6 +88,26 @@ export default function Header() {
             />
           </svg>
         </button>
+      </div>
+      {/* 오버레이 */}
+      <div
+        className={`fixed inset-0 bg-gray-300 z-40 transition-opacity duration-300 ${
+          isOpen ? "opacity-50" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6 space-y-4 transform transition-transform transition-opacity duration-300 ease-in-out ${
+          isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+        }`}
+      >
+        <button
+          className="mb-4 text-gray-500 hover:text-gray-700"
+          onClick={() => setIsOpen(false)}
+        >
+          닫기 ✕
+        </button>
+        <nav className="flex flex-col space-y-4 text-gray-700">{getMenu()}</nav>
       </div>
     </header>
   );
