@@ -1,4 +1,12 @@
 import CategorySidebar from "@/components/CategorySidebar";
+import ProductItem from "@/components/ProductItem";
+
+const products = Array.from({ length: 10 }, (_, i) => ({
+  id: i + 1,
+  title: `테스트 상품${i + 1}`,
+  price: 10000 + i * 2000,
+  imageUrl: `https://picsum.photos/seed/product${i + 1}/300/300`,
+}));
 
 export default function HomePage() {
   return (
@@ -18,16 +26,9 @@ export default function HomePage() {
         {/* 추천 상품 */}
         <div>
           <h2 className="text-xl font-bold mb-4">오늘의 추천상품</h2>
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                className="border rounded-md p-2 hover:shadow transition"
-              >
-                <div className="bg-gray-200 h-40 rounded-md mb-2"></div>
-                <p className="text-sm">상품명 {i + 1}</p>
-                <p className="text-green-600 font-bold">₩10,000</p>
-              </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {products.map((p) => (
+              <ProductItem key={p.id} {...p} />
             ))}
           </div>
         </div>
