@@ -1,27 +1,16 @@
+import { getProductById } from "@/data/products";
 import { notFound } from "next/navigation";
 
 interface ProductDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-const products = [
-  {
-    id: 1,
-    title: "테스트 상품1",
-    price: 10000,
-    desc: "테스트 상품 1의 설명입니다.",
-  },
-  {
-    id: 2,
-    title: "테스트 상품2",
-    price: 12000,
-    desc: "테스트 상품 2의 설명입니다.",
-  },
-];
-
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const productId = Number(params.id);
-  const product = products.find((p) => p.id === productId);
+export default async function ProductDetailPage({
+  params,
+}: ProductDetailPageProps) {
+  const { id } = await params;
+  const productId = Number(id);
+  const product = getProductById(productId);
 
   if (!product) {
     return notFound(); // 없는 상품이면 404 처리
