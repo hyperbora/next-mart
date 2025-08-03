@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getProductById } from "@/data/products";
 import { notFound } from "next/navigation";
 
@@ -13,14 +14,24 @@ export default async function ProductDetailPage({
   const product = getProductById(productId);
 
   if (!product) {
-    return notFound(); // 없는 상품이면 404 처리
+    return notFound();
   }
 
   return (
     <div className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow">
       <h1 className="mb-4 text-2xl font-bold">{product.title}</h1>
-      <div className="flex items-center justify-center h-64 mb-4 bg-gray-200 rounded-md">
-        상품 이미지 영역
+      <div className="relative flex items-center justify-center h-64 mb-4 overflow-hidden bg-gray-200 rounded-md">
+        {product.imageUrl ? (
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, 768px"
+          />
+        ) : (
+          <span className="text-gray-400">이미지가 없습니다.</span>
+        )}
       </div>
       <p className="mb-2 font-bold text-green-600">
         ₩{product.price.toLocaleString()}
