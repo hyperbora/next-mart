@@ -2,8 +2,9 @@ import CategorySidebar from "@/components/CategorySidebar";
 import ProductItem from "@/components/ProductItem";
 import { getAllProducts } from "@/data/products";
 
-export default function HomePage() {
-  const products = getAllProducts();
+export default async function HomePage() {
+  const products = await getAllProducts();
+
   return (
     <div className="grid grid-cols-12 gap-4 py-6 mx-auto max-w-7xl">
       {/* 왼쪽 카테고리 */}

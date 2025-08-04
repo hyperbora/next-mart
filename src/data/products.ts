@@ -1,23 +1,42 @@
+import { supabase } from "@/lib/supabaseClient";
+
 export interface Product {
   id: number;
   title: string;
   price: number;
-  imageUrl?: string;
-  desc?: string;
+  image_url?: string;
+  description?: string;
+  inserted_at?: string;
+  updated_at?: string;
 }
 
-const products: Product[] = Array.from({ length: 10 }, (_, i) => ({
-  id: i + 1,
-  title: `테스트 상품${i + 1}`,
-  price: 10000 + i * 2000,
-  imageUrl: `https://picsum.photos/seed/product${i + 1}/300/300`,
-  desc: `테스트 상품 ${i + 1}의 설명입니다.`,
-}));
+// 전체 상품 조회
+export async function getAllProducts(): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .order("id", { ascending: true });
 
-export function getAllProducts(): Product[] {
-  return products;
+  if (error) {
+    console.error("Supabase getAllProducts error:", error.message);
+    return [];
+  }
+
+  return data as Product[];
 }
 
-export function getProductById(id: number): Product | undefined {
-  return products.find((p) => p.id === id);
+// ID로 상품 조회
+export async function getProductById(id: number): Promise<Product | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Supabase getProductById error:", error.message);
+    return null;
+  }
+
+  return data as Product;
 }

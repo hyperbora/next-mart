@@ -11,7 +11,7 @@ export default async function ProductDetailPage({
 }: ProductDetailPageProps) {
   const { id } = await params;
   const productId = Number(id);
-  const product = getProductById(productId);
+  const product = await getProductById(productId);
 
   if (!product) {
     return notFound();
@@ -21,9 +21,9 @@ export default async function ProductDetailPage({
     <div className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow">
       <h1 className="mb-4 text-2xl font-bold">{product.title}</h1>
       <div className="relative flex items-center justify-center h-64 mb-4 overflow-hidden bg-gray-200 rounded-md">
-        {product.imageUrl ? (
+        {product.image_url ? (
           <Image
-            src={product.imageUrl}
+            src={product.image_url}
             alt={product.title}
             fill
             className="object-contain"
@@ -34,9 +34,9 @@ export default async function ProductDetailPage({
         )}
       </div>
       <p className="mb-2 font-bold text-green-600">
-        ₩{product.price.toLocaleString()}
+        ₩{product.price?.toLocaleString()}
       </p>
-      <p className="mb-6 text-gray-700">{product.desc}</p>
+      <p className="mb-6 text-gray-700">{product.description}</p>
       <button className="px-6 py-2 text-white transition bg-green-600 rounded hover:bg-green-700">
         장바구니 담기
       </button>

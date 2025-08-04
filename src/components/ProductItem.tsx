@@ -5,14 +5,14 @@ interface ProductItemProps {
   id: number;
   title: string;
   price: number;
-  imageUrl?: string;
+  image_url?: string;
 }
 
 export default function ProductItem({
   id,
   title,
   price,
-  imageUrl,
+  image_url,
 }: ProductItemProps) {
   return (
     <Link
@@ -20,9 +20,9 @@ export default function ProductItem({
       className="block p-2 transition bg-white border rounded-md cursor-pointer hover:shadow-lg"
     >
       <div className="relative flex items-center justify-center h-40 mb-2 overflow-hidden bg-gray-200 rounded-md group">
-        {imageUrl ? (
+        {image_url ? (
           <Image
-            src={imageUrl}
+            src={image_url}
             alt={title}
             width={300}
             height={300}
