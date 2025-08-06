@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { getProductById } from "@/data/products";
 import { notFound } from "next/navigation";
+import LoadingImage from "@/components/LoadingImage";
 
 interface ProductDetailPageProps {
   params: Promise<{ id: string }>;
@@ -22,7 +22,7 @@ export default async function ProductDetailPage({
       <h1 className="mb-4 text-2xl font-bold">{product.title}</h1>
       <div className="relative flex items-center justify-center h-64 mb-4 overflow-hidden bg-gray-200 rounded-md">
         {product.image_url ? (
-          <Image
+          <LoadingImage
             src={product.image_url}
             alt={product.title}
             fill
