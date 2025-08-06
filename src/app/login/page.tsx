@@ -17,7 +17,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -36,13 +36,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center mt-20 px-4">
-      <div className="w-full max-w-md bg-white p-6 rounded shadow">
-        <h1 className="text-xl font-bold mb-4 text-center">로그인</h1>
+    <div className="flex justify-center px-4 mt-20">
+      <div className="w-full max-w-md p-6 bg-white rounded shadow">
+        <h1 className="mb-4 text-xl font-bold text-center">로그인</h1>
         <input
           type="email"
           placeholder="이메일"
-          className="border p-2 w-full mb-2 rounded"
+          className="w-full p-2 mb-2 border rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -50,19 +50,19 @@ export default function LoginPage() {
         <input
           type="password"
           placeholder="비밀번호"
-          className="border p-2 w-full mb-2 rounded"
+          className="w-full p-2 mb-2 border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <button
           onClick={handleLogin}
-          className="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700 transition"
+          className="w-full px-4 py-2 text-white transition bg-green-600 rounded hover:bg-green-700"
         >
           로그인
         </button>
-        {message && <p className="mt-2 text-center text-sm">{message}</p>}
-        <p className="mt-4 text-center text-sm text-gray-600">
+        {message && <p className="mt-2 text-sm text-center">{message}</p>}
+        <p className="mt-4 text-sm text-center text-gray-600">
           계정이 없으신가요?{" "}
           <Link href="/signup" className="text-green-600 hover:underline">
             회원가입
