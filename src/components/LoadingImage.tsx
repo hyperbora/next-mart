@@ -3,18 +3,17 @@
 import Image, { ImageProps } from "next/image";
 import { useState } from "react";
 
-interface LoadingImageProps extends ImageProps {}
-
-export default function LoadingImage(props: LoadingImageProps) {
+export default function LoadingImage(props: ImageProps) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full h-full">
       {loading && (
-        <div className="absolute w-6 h-6 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin" />
+        <div className="absolute w-6 h-6 border-2 border-gray-300 rounded-full border-t-green-500 animate-spin" />
       )}
       <Image
         {...props}
+        alt={props.alt ?? ""}
         className={`${props.className || ""} ${
           loading ? "opacity-0" : "opacity-100"
         }`}
