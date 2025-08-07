@@ -25,5 +25,5 @@ export default function AuthListener() {
     };
   }, [setSession]);
 
-  return null; // 화면에 아무것도 렌더링하지 않음
+  return null;
 }
