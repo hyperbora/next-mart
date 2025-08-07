@@ -3,16 +3,19 @@
 import { supabase } from "@/lib/supabaseClient";
 import { useAppStore } from "@/store/useAppStore";
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const session = useAppStore((state) => state.session);
-  const [isOpen, setIsOpen] = useState(false);
+  const isSidebarOpen = useAppStore((state) => state.isSidebarOpen);
+  const toggleSidebar = useAppStore((state) => state.toggleSidebar);
+  const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setIsOpen(false);
+        toggleSidebar();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -24,7 +27,7 @@ export default function Header() {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null;
     // 메뉴 오픈 시 body overflow hidden 및 blur 효과
-    if (isOpen) {
+    if (isSidebarOpen) {
       document.body.style.overflow = "hidden";
       document.body.classList.add("menu-open");
     } else {
@@ -38,10 +41,11 @@ export default function Header() {
       document.body.style.overflow = "";
       document.body.classList.remove("menu-open");
     };
-  }, [isOpen]);
+  }, [isSidebarOpen]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setTimeout(() => router.push("/"), 1000);
   };
 
   const menus = useMemo(() => {
@@ -71,28 +75,34 @@ export default function Header() {
         ];
 
     return items.map((item, idx) => (
-      <span
-        key={idx}
-        className="flex items-center w-auto"
-        onClick={() => setIsOpen(false)}
-      >
+      <span key={idx} className="flex items-center">
         {item.type === "link" && (
-          <Link href={item.href!} className={commonClass}>
+          <Link
+            href={item.href!}
+            onClick={() => isSidebarOpen && toggleSidebar()}
+            className={commonClass}
+          >
             {item.label}
           </Link>
         )}
         {item.type === "button" && (
-          <button onClick={item.onClick} className={commonClass}>
+          <button
+            onClick={() => {
+              item.onClick?.();
+              isSidebarOpen && toggleSidebar();
+            }}
+            className={commonClass}
+          >
             {item.label}
           </button>
         )}
         {item.type === "text" && <span>{item.label}</span>}
-        {item.type === "divider" && !isOpen && (
+        {item.type === "divider" && !isSidebarOpen && (
           <span className="text-gray-300">|</span>
         )}
       </span>
     ));
-  }, [session, isOpen]);
+  }, [session, isSidebarOpen]);
 
   return (
     <header className="bg-white border-b shadow-sm">
@@ -110,7 +120,7 @@ export default function Header() {
         </nav>
         <button
           className="md:hidden p-2 rounded hover:bg-gray-100"
-          onClick={() => setIsOpen(true)}
+          onClick={() => toggleSidebar()}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -131,18 +141,20 @@ export default function Header() {
       {/* 오버레이 */}
       <div
         className={`fixed inset-0 bg-gray-300 z-40 transition-opacity duration-300 ${
-          isOpen ? "opacity-50" : "opacity-0 pointer-events-none"
+          isSidebarOpen ? "opacity-50" : "opacity-0 pointer-events-none"
         }`}
-        onClick={() => setIsOpen(false)}
+        onClick={() => toggleSidebar()}
       />
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6 space-y-4 transform transition-opacity duration-300 ease-in-out ${
-          isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          isSidebarOpen
+            ? "translate-x-0 opacity-100"
+            : "translate-x-full opacity-0"
         }`}
       >
         <button
           className="mb-4 text-gray-500 hover:text-gray-700 cursor-pointer"
-          onClick={() => setIsOpen(false)}
+          onClick={() => toggleSidebar()}
         >
           닫기 ✕
         </button>
