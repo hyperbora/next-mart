@@ -1,9 +1,12 @@
 "use client";
 
+import { supabase } from "@/lib/supabaseClient";
+import { useAppStore } from "@/store/useAppStore";
 import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
 
 export default function Header() {
+  const session = useAppStore((state) => state.session);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -37,22 +40,52 @@ export default function Header() {
     };
   }, [isOpen]);
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
   const menus = useMemo(() => {
-    return [
-      { href: "/login", label: "로그인" },
-      { href: "/signup", label: "회원가입" },
-      { href: "/mypage", label: "마이페이지" },
-      { href: "/cart", label: "장바구니" },
-    ].map((item) => (
-      <Link
-        key={item.href}
-        href={item.href}
-        className="hover:text-green-600 transition-colors cursor-pointer"
-      >
-        {item.label}
-      </Link>
-    ));
-  }, []);
+    return session ? (
+      <>
+        <span className="hidden sm:inline">
+          {session.user.user_metadata.full_name} 님
+        </span>
+        <button
+          onClick={handleLogout}
+          className="hover:text-green-600 transition-colors cursor-pointer"
+        >
+          로그아웃
+        </button>
+        {[
+          { href: "/mypage", label: "마이페이지" },
+          { href: "/cart", label: "장바구니" },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="hover:text-green-600 transition-colors cursor-pointer"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </>
+    ) : (
+      [
+        { href: "/login", label: "로그인" },
+        { href: "/signup", label: "회원가입" },
+        { href: "/mypage", label: "마이페이지" },
+        { href: "/cart", label: "장바구니" },
+      ].map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="hover:text-green-600 transition-colors cursor-pointer"
+        >
+          {item.label}
+        </Link>
+      ))
+    );
+  }, [session]);
 
   return (
     <header className="bg-white border-b shadow-sm">
@@ -65,7 +98,9 @@ export default function Header() {
           placeholder="검색어를 입력하세요"
           className="border rounded-md px-3 py-2 w-40 sm:w-64 md:w-96"
         />
-        <nav className="hidden md:flex space-x-4 text-gray-700">{menus}</nav>
+        <nav className="hidden md:flex space-x-4 text-gray-700 items-center">
+          {menus}
+        </nav>
         <button
           className="md:hidden p-2 rounded hover:bg-gray-100"
           onClick={() => setIsOpen(!isOpen)}
