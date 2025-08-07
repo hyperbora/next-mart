@@ -45,47 +45,54 @@ export default function Header() {
   };
 
   const menus = useMemo(() => {
-    return session ? (
-      <>
-        <span className="hidden sm:inline">
-          {session.user.user_metadata.full_name} 님
-        </span>
-        <button
-          onClick={handleLogout}
-          className="hover:text-green-600 transition-colors cursor-pointer"
-        >
-          로그아웃
-        </button>
-        {[
-          { href: "/mypage", label: "마이페이지" },
-          { href: "/cart", label: "장바구니" },
-        ].map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="hover:text-green-600 transition-colors cursor-pointer"
-          >
+    const commonClass = "hover:text-green-600 transition-colors cursor-pointer";
+
+    const items = session
+      ? [
+          {
+            type: "text",
+            label: `${session.user.user_metadata.full_name} 님`,
+          },
+          { type: "divider" },
+          { type: "button", label: "로그아웃", onClick: handleLogout },
+          { type: "divider" },
+          { type: "link", href: "/mypage", label: "마이페이지" },
+          { type: "divider" },
+          { type: "link", href: "/cart", label: "장바구니" },
+        ]
+      : [
+          { type: "link", href: "/login", label: "로그인" },
+          { type: "divider" },
+          { type: "link", href: "/signup", label: "회원가입" },
+          { type: "divider" },
+          { type: "link", href: "/mypage", label: "마이페이지" },
+          { type: "divider" },
+          { type: "link", href: "/cart", label: "장바구니" },
+        ];
+
+    return items.map((item, idx) => (
+      <span
+        key={idx}
+        className="flex items-center w-auto"
+        onClick={() => setIsOpen(false)}
+      >
+        {item.type === "link" && (
+          <Link href={item.href!} className={commonClass}>
             {item.label}
           </Link>
-        ))}
-      </>
-    ) : (
-      [
-        { href: "/login", label: "로그인" },
-        { href: "/signup", label: "회원가입" },
-        { href: "/mypage", label: "마이페이지" },
-        { href: "/cart", label: "장바구니" },
-      ].map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className="hover:text-green-600 transition-colors cursor-pointer"
-        >
-          {item.label}
-        </Link>
-      ))
-    );
-  }, [session]);
+        )}
+        {item.type === "button" && (
+          <button onClick={item.onClick} className={commonClass}>
+            {item.label}
+          </button>
+        )}
+        {item.type === "text" && <span>{item.label}</span>}
+        {item.type === "divider" && !isOpen && (
+          <span className="text-gray-300">|</span>
+        )}
+      </span>
+    ));
+  }, [session, isOpen]);
 
   return (
     <header className="bg-white border-b shadow-sm">
@@ -103,7 +110,7 @@ export default function Header() {
         </nav>
         <button
           className="md:hidden p-2 rounded hover:bg-gray-100"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen(true)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -134,12 +141,14 @@ export default function Header() {
         }`}
       >
         <button
-          className="mb-4 text-gray-500 hover:text-gray-700"
+          className="mb-4 text-gray-500 hover:text-gray-700 cursor-pointer"
           onClick={() => setIsOpen(false)}
         >
           닫기 ✕
         </button>
-        <nav className="flex flex-col space-y-4 text-gray-700">{menus}</nav>
+        <nav className="flex flex-col space-y-1 text-gray-700 justify-center">
+          {menus}
+        </nav>
       </div>
     </header>
   );
