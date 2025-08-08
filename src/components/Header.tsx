@@ -2,6 +2,7 @@
 
 import { supabase } from "@/lib/supabaseClient";
 import { useAppStore } from "@/store/useAppStore";
+import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,9 @@ export default function Header() {
   const isSidebarOpen = useAppStore((state) => state.isSidebarOpen);
   const toggleSidebar = useAppStore((state) => state.toggleSidebar);
   const router = useRouter();
+
+  const items = useCartStore((state) => state.items);
+  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -22,11 +26,10 @@ export default function Header() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  });
+  }, [toggleSidebar]);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null;
-    // 메뉴 오픈 시 body overflow hidden 및 blur 효과
     if (isSidebarOpen) {
       document.body.style.overflow = "hidden";
       document.body.classList.add("menu-open");
@@ -61,7 +64,20 @@ export default function Header() {
           { type: "divider" },
           { type: "link", href: "/mypage", label: "마이페이지" },
           { type: "divider" },
-          { type: "link", href: "/cart", label: "장바구니" },
+          {
+            type: "link",
+            href: "/cart",
+            label: (
+              <>
+                장바구니
+                {totalCount > 0 && (
+                  <span className="ml-1 inline-block min-w-[18px] px-1 text-xs font-bold text-white bg-red-600 rounded-full text-center align-middle">
+                    {totalCount}
+                  </span>
+                )}
+              </>
+            ),
+          },
         ]
       : [
           { type: "link", href: "/login", label: "로그인" },
@@ -103,7 +119,7 @@ export default function Header() {
         )}
       </span>
     ));
-  }, [session, isSidebarOpen, toggleSidebar, router]);
+  }, [session, isSidebarOpen, toggleSidebar, router, totalCount]);
 
   return (
     <header className="bg-white border-b shadow-sm">
@@ -139,7 +155,6 @@ export default function Header() {
           </svg>
         </button>
       </div>
-      {/* 오버레이 */}
       <div
         className={`fixed inset-0 bg-gray-300 z-40 transition-opacity duration-300 ${
           isSidebarOpen ? "opacity-50" : "opacity-0 pointer-events-none"

@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import AuthListener from "@/components/AuthListener";
 import { Toaster } from "react-hot-toast";
+import AuthCartSync from "@/components/AuthCartSync";
 
 export const metadata = {
   title: "Next Mart",
@@ -16,6 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* 로그인 세션 초기화/리스너 */}
         <AuthListener />
         <Toaster />
+        <AuthCartSync />
 
         {/* 상단 고정 헤더 */}
         <div className="fixed top-0 left-0 z-50 w-full">

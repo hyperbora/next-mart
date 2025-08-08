@@ -2,32 +2,31 @@ import { create } from "zustand";
 
 interface CartItem {
   id: number;
-  title: string;
-  price: number;
-  image_url?: string;
   quantity: number;
 }
 
 interface CartStore {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
+  setItems: (items: CartItem[]) => void;
+  addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
+  setItems: (items) => set({ items }),
   addToCart: (item) => {
     const items = get().items;
     const existing = items.find((i) => i.id === item.id);
     if (existing) {
       set({
         items: items.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
         ),
       });
     } else {
-      set({ items: [...items, { ...item, quantity: 1 }] });
+      set({ items: [...items, item] });
     }
   },
   removeFromCart: (id) => {
