@@ -22,7 +22,7 @@ export default function Header() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  });
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null;
@@ -43,12 +43,11 @@ export default function Header() {
     };
   }, [isSidebarOpen]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setTimeout(() => router.push("/"), 1000);
-  };
-
   const menus = useMemo(() => {
+    const handleLogout = async () => {
+      await supabase.auth.signOut();
+      setTimeout(() => router.push("/"), 1000);
+    };
     const commonClass = "hover:text-green-600 transition-colors cursor-pointer";
 
     const items = session
@@ -89,7 +88,9 @@ export default function Header() {
           <button
             onClick={() => {
               item.onClick?.();
-              isSidebarOpen && toggleSidebar();
+              if (isSidebarOpen) {
+                toggleSidebar();
+              }
             }}
             className={commonClass}
           >
@@ -102,24 +103,24 @@ export default function Header() {
         )}
       </span>
     ));
-  }, [session, isSidebarOpen]);
+  }, [session, isSidebarOpen, toggleSidebar, router]);
 
   return (
     <header className="bg-white border-b shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <div className="flex items-center justify-between p-4 mx-auto max-w-7xl">
         <div className="text-2xl font-bold text-green-600">
           <Link href="/">NMart</Link>
         </div>
         <input
           type="text"
           placeholder="검색어를 입력하세요"
-          className="border rounded-md px-3 py-2 w-40 sm:w-64 md:w-96"
+          className="w-40 px-3 py-2 border rounded-md sm:w-64 md:w-96"
         />
-        <nav className="hidden md:flex space-x-4 text-gray-700 items-center">
+        <nav className="items-center hidden space-x-4 text-gray-700 md:flex">
           {menus}
         </nav>
         <button
-          className="md:hidden p-2 rounded hover:bg-gray-100"
+          className="p-2 rounded md:hidden hover:bg-gray-100"
           onClick={() => toggleSidebar()}
         >
           <svg
@@ -153,12 +154,12 @@ export default function Header() {
         }`}
       >
         <button
-          className="mb-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+          className="mb-4 text-gray-500 cursor-pointer hover:text-gray-700"
           onClick={() => toggleSidebar()}
         >
           닫기 ✕
         </button>
-        <nav className="flex flex-col space-y-1 text-gray-700 justify-center">
+        <nav className="flex flex-col justify-center space-y-1 text-gray-700">
           {menus}
         </nav>
       </div>
