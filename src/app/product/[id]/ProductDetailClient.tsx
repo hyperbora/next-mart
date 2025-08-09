@@ -20,7 +20,10 @@ export default function ProductDetailClient({
   const addToCart = useCartStore((state) => state.addToCart);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart({
+      id: product.id,
+      quantity: 1,
+    });
     toast.success("장바구니에 담겼습니다!");
   };
 
