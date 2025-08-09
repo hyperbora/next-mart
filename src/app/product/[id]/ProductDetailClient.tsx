@@ -1,6 +1,6 @@
 "use client";
 
-import { useCartStore } from "@/store/useCartStore";
+import { useCartSync } from "@/lib/cartSync";
 import LoadingImage from "@/components/LoadingImage";
 import toast from "react-hot-toast";
 
@@ -17,13 +17,10 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({
   product,
 }: ProductDetailClientProps) {
-  const addToCart = useCartStore((state) => state.addToCart);
+  const { addToCart } = useCartSync();
 
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      quantity: 1,
-    });
+  const handleAddToCart = async () => {
+    await addToCart({ id: product.id, quantity: 1 });
     toast.success("장바구니에 담겼습니다!");
   };
 

@@ -1,4 +1,4 @@
-import { upsertCartItem, deleteCartItem } from "@/lib/cartApi";
+import { upsertCartItem, deleteCartItem, getCartItem } from "@/lib/cartApi";
 import { useAppStore } from "@/store/useAppStore";
 import { useCartStore } from "@/store/useCartStore";
 
@@ -9,13 +9,20 @@ export function useCartSync() {
 
   // 장바구니에 아이템 추가 및 DB 동기화
   async function addToCart(item: { id: number; quantity: number }) {
-    addToCartStore(item);
     if (session) {
       try {
-        await upsertCartItem(session.user.id, item.id, item.quantity);
+        const existing = await getCartItem(session.user.id, item.id);
+        await upsertCartItem(
+          session.user.id,
+          item.id,
+          existing ? existing.quantity + item.quantity : item.quantity
+        );
+        addToCartStore(item);
       } catch (error) {
         console.error("장바구니 DB 저장 실패", error);
       }
+    } else {
+      addToCartStore(item);
     }
   }
 
