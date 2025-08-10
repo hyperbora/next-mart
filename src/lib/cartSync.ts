@@ -8,13 +8,13 @@ export function useCartSync() {
   const removeFromCartStore = useCartStore((state) => state.removeFromCart);
 
   // 장바구니에 아이템 추가 및 DB 동기화
-  async function addToCart(item: { id: number; quantity: number }) {
+  async function addToCart(item: { product_id: number; quantity: number }) {
     if (session) {
       try {
-        const existing = await getCartItem(session.user.id, item.id);
+        const existing = await getCartItem(session.user.id, item.product_id);
         await upsertCartItem(
           session.user.id,
-          item.id,
+          item.product_id,
           existing ? existing.quantity + item.quantity : item.quantity
         );
         addToCartStore(item);
@@ -27,11 +27,11 @@ export function useCartSync() {
   }
 
   // 장바구니 아이템 제거 및 DB 동기화
-  async function removeFromCart(id: number) {
-    removeFromCartStore(id);
+  async function removeFromCart(product_id: number) {
+    removeFromCartStore(product_id);
     if (session) {
       try {
-        await deleteCartItem(session.user.id, id);
+        await deleteCartItem(session.user.id, product_id);
       } catch (error) {
         console.error("장바구니 DB 삭제 실패", error);
       }

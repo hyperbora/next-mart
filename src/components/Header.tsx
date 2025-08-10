@@ -13,8 +13,8 @@ export default function Header() {
   const toggleSidebar = useAppStore((state) => state.toggleSidebar);
   const router = useRouter();
 
-  const items = useCartStore((state) => state.items);
-  const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const cartItems = useCartStore((state) => state.cartItems);
+  const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -3,10 +3,19 @@ import { supabase } from "./supabaseClient";
 export async function getCartItemsByUser(userId: string) {
   const { data, error } = await supabase
     .from("cart_items")
-    .select("product_id, quantity")
+    .select("product_id, quantity, products(title, price, image_url)")
     .eq("user_id", userId);
   if (error) throw error;
-  return data || [];
+  console.log("getCartItemsByUser", data);
+  return (
+    data?.map((item) => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+      title: item.products?.[0]?.title,
+      price: item.products?.[0]?.price,
+      image_url: item.products?.[0]?.image_url,
+    })) || []
+  );
 }
 
 export async function upsertCartItem(
