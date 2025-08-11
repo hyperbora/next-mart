@@ -11,11 +11,7 @@ export default function AuthCartSync() {
 
   useEffect(() => {
     if (session) {
-      getCartItemsByUser(session.user.id).then((items) => {
-        setCartItems(
-          items.map((i) => ({ product_id: i.product_id, quantity: i.quantity }))
-        );
-      });
+      getCartItemsByUser(session.user.id).then(setCartItems);
     } else {
       setCartItems([]);
     }
