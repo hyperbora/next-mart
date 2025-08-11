@@ -9,7 +9,9 @@ export default function LoadingImage(props: ImageProps) {
   return (
     <>
       {loading && (
-        <div className="w-6 h-6 border-2 border-gray-300 rounded-full border-t-green-500 animate-spin" />
+        <div className="absolute flex items-center justify-center h-full">
+          <div className="w-6 h-6 border-2 border-gray-300 rounded-full border-t-green-500 animate-spin" />
+        </div>
       )}
       <Image
         {...props}
