@@ -20,7 +20,15 @@ export default function ProductDetailClient({
   const { addToCart } = useCartSync();
 
   const handleAddToCart = async () => {
-    await addToCart({ product_id: product.id, quantity: 1 });
+    await addToCart({
+      product_id: product.id,
+      quantity: 1,
+      product: {
+        title: product.title,
+        price: product.price,
+        image_url: product.image_url || "/file.svg",
+      },
+    });
     toast.success("장바구니에 담겼습니다!");
   };
 

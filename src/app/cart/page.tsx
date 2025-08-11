@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { getCartItemsByUser, deleteCartItem } from "@/lib/cartApi";
 import { useAppStore } from "@/store/useAppStore";
-import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import LoadingImage from "@/components/LoadingImage";
 
 export default function CartPage() {
   const session = useAppStore((state) => state.session);
@@ -78,26 +78,28 @@ export default function CartPage() {
             key={item.product_id}
             className="flex items-center gap-4 p-4 bg-white border rounded-md"
           >
-            {item.image_url && (
-              <Image
-                src={item.image_url}
-                alt={item.title || "상품 이미지"}
-                width={80}
-                height={80}
-                className="object-contain rounded-md"
-              />
+            {item.product && (
+              <>
+                <LoadingImage
+                  src={item.product?.image_url || "/file.svg"}
+                  alt={item.product?.title || "상품 이미지"}
+                  width={80}
+                  height={80}
+                  className="object-contain rounded-md"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold">{item.product?.title}</p>
+                  <p>₩{item.product?.price.toLocaleString()}</p>
+                  <p>수량: {item.quantity}</p>
+                </div>
+                <button
+                  onClick={() => handleRemove(item.product_id)}
+                  className="text-red-500 hover:underline"
+                >
+                  삭제
+                </button>
+              </>
             )}
-            <div className="flex-1">
-              <p className="font-semibold">{item.title}</p>
-              <p>₩{item.price?.toLocaleString()}</p>
-              <p>수량: {item.quantity}</p>
-            </div>
-            <button
-              onClick={() => handleRemove(item.product_id)}
-              className="text-red-500 hover:underline"
-            >
-              삭제
-            </button>
           </li>
         ))}
       </ul>

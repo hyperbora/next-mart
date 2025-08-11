@@ -7,9 +7,9 @@ export default function LoadingImage(props: ImageProps) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <div className="relative flex items-center justify-center w-full h-full">
+    <>
       {loading && (
-        <div className="absolute w-6 h-6 border-2 border-gray-300 rounded-full border-t-green-500 animate-spin" />
+        <div className="w-6 h-6 border-2 border-gray-300 rounded-full border-t-green-500 animate-spin" />
       )}
       <Image
         {...props}
@@ -19,6 +19,6 @@ export default function LoadingImage(props: ImageProps) {
         }`}
         onLoad={() => setLoading(false)}
       />
-    </div>
+    </>
   );
 }

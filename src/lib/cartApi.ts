@@ -1,21 +1,23 @@
+import { QueryData } from "@supabase/supabase-js";
 import { supabase } from "./supabaseClient";
 
 export async function getCartItemsByUser(userId: string) {
-  const { data, error } = await supabase
+  const cartItemsWithProductQuery = supabase
     .from("cart_items")
     .select("product_id, quantity, products(title, price, image_url)")
     .eq("user_id", userId);
+
+  type CartItemsWithProduct = QueryData<typeof cartItemsWithProductQuery>;
+  const { data, error } = await cartItemsWithProductQuery;
   if (error) throw error;
-  console.log("getCartItemsByUser", data);
-  return (
-    data?.map((item) => ({
-      product_id: item.product_id,
-      quantity: item.quantity,
-      title: item.products?.[0]?.title,
-      price: item.products?.[0]?.price,
-      image_url: item.products?.[0]?.image_url,
-    })) || []
-  );
+
+  const cartItemsWithProduct: CartItemsWithProduct = data;
+  return cartItemsWithProduct.map((item) => {
+    return {
+      ...item,
+      product: Array.isArray(item.products) ? item.products[0] : item.products,
+    };
+  });
 }
 
 export async function upsertCartItem(

@@ -14,7 +14,7 @@ export default function Header() {
   const router = useRouter();
 
   const cartItems = useCartStore((state) => state.cartItems);
-  const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalCount = cartItems.length;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

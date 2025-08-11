@@ -1,11 +1,15 @@
 import { create } from "zustand";
 
+interface Product {
+  title: string;
+  price: number;
+  image_url: string;
+}
+
 interface CartItem {
   product_id: number;
   quantity: number;
-  title?: string;
-  price?: number;
-  image_url?: string;
+  product: Product | null;
 }
 
 interface CartStore {
@@ -41,3 +45,5 @@ export const useCartStore = create<CartStore>((set, get) => ({
   },
   clearCart: () => set({ cartItems: [] }),
 }));
+
+export type { Product };
