@@ -89,7 +89,12 @@ export default function CartPage() {
                   className="object-contain rounded-md"
                 />
                 <div className="flex-1">
-                  <p className="font-semibold">{item.product?.title}</p>
+                  <Link
+                    href={`/product/${item.product_id}`}
+                    className="transition-colors cursor-pointer hover:underline hover:text-green-600"
+                  >
+                    <p className="font-semibold">{item.product?.title}</p>
+                  </Link>
                   <p>₩{item.product?.price.toLocaleString()}</p>
                   <p>수량: {item.quantity}</p>
                 </div>
