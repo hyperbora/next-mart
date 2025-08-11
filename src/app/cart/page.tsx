@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
-import { getCartItemsByUser, deleteCartItem } from "@/lib/cartApi";
+import { getCartItemsByUser } from "@/lib/cartApi";
 import { useAppStore } from "@/store/useAppStore";
+import { useCartSync } from "@/lib/cartSync";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import LoadingImage from "@/components/LoadingImage";
@@ -12,6 +13,7 @@ export default function CartPage() {
   const session = useAppStore((state) => state.session);
   const { cartItems, setCartItems } = useCartStore();
   const [loading, setLoading] = useState(true);
+  const { removeFromCart } = useCartSync();
 
   useEffect(() => {
     if (!session) {
@@ -34,8 +36,7 @@ export default function CartPage() {
   const handleRemove = async (productId: number) => {
     if (!session) return;
     try {
-      await deleteCartItem(session.user.id, productId);
-      setCartItems(cartItems.filter((item) => item.product_id !== productId));
+      await removeFromCart(productId);
       toast.success("삭제되었습니다.");
     } catch (err) {
       console.error(err);
