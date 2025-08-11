@@ -95,9 +95,9 @@ export default function CartPage() {
                 </div>
                 <button
                   onClick={() => handleRemove(item.product_id)}
-                  className="text-red-500 hover:underline"
+                  className="px-3 py-1 text-lg text-red-600 transition-colors cursor-pointer "
                 >
-                  삭제
+                  ✕
                 </button>
               </>
             )}
