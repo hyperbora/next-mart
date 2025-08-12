@@ -1,11 +1,8 @@
 import { supabase } from "@/lib/supabaseServer";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = await params;
+export async function GET(req: Request, context: { params: { id: string } }) {
+  const { id } = await context.params;
   const { data, error } = await supabase
     .from("orders")
     .select(
@@ -34,5 +31,20 @@ export async function GET(
     return NextResponse.json({ error: "권한이 없습니다." }, { status: 403 });
   }
 
-  return NextResponse.json({ order: data });
+  const { order_items, ...rest } = data;
+  const newOrderItems = Array.isArray(order_items)
+    ? order_items.map((item) => ({
+        quantity: item.quantity,
+        product: Array.isArray(item.products)
+          ? item.products[0]
+          : item.products,
+      }))
+    : [];
+
+  const newData = {
+    ...rest,
+    order_items: newOrderItems,
+  };
+
+  return NextResponse.json({ order: newData });
 }
