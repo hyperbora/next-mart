@@ -7,6 +7,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { useCartSync } from "@/lib/cartSync";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
 import ConfirmModal from "@/components/ConfirmModal";
 
@@ -16,6 +17,9 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const { removeFromCart } = useCartSync();
   const [removeTarget, setRemoveTarget] = useState<number | null>(null);
+  const [creatingOrder, setCreatingOrder] = useState(false);
+  const [confirmOrder, setConfirmOrder] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!session) {
@@ -52,6 +56,34 @@ export default function CartPage() {
     }
   };
 
+  const handleCreateOrder = async () => {
+    if (!session) {
+      toast.error("로그인이 필요합니다.");
+      return;
+    }
+    setCreatingOrder(true);
+    try {
+      const res = await fetch("/api/orders/create", {
+        method: "POST",
+        body: JSON.stringify({ user_id: session.user.id }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("주문이 생성되었습니다.");
+        router.push(`/orders/${data.order_id}`);
+      } else {
+        toast.error(data.error || "주문 실패");
+      }
+    } catch (error) {
+      toast.error("주문 중 오류가 발생했습니다.");
+      console.error(error);
+    } finally {
+      setCreatingOrder(false);
+      setConfirmOrder(false);
+    }
+  };
+
   if (!session) {
     return (
       <div className="p-6 text-center">
@@ -82,6 +114,17 @@ export default function CartPage() {
     <div className="max-w-3xl p-6 mx-auto">
       <h1 className="mb-6 text-2xl font-bold">장바구니</h1>
 
+      {/* 주문하기 버튼 */}
+      <div className="mb-4 flex justify-end">
+        <button
+          onClick={() => setConfirmOrder(true)}
+          disabled={creatingOrder}
+          className="px-4 py-2 font-semibold text-white bg-green-600 rounded hover:bg-green-700 disabled:bg-gray-400 cursor-pointer"
+        >
+          {creatingOrder ? "주문 생성 중..." : "주문하기"}
+        </button>
+      </div>
+
       {/* 모달 */}
       {removeTarget !== null && (
         <ConfirmModal
@@ -90,6 +133,15 @@ export default function CartPage() {
           confirmText="삭제"
           onConfirm={confirmRemove}
           onCancel={() => setRemoveTarget(null)}
+        />
+      )}
+
+      {confirmOrder && (
+        <ConfirmModal
+          title="주문 확인"
+          message="이대로 주문을 진행하시겠습니까?"
+          onConfirm={handleCreateOrder}
+          onCancel={() => setConfirmOrder(false)}
         />
       )}
 
