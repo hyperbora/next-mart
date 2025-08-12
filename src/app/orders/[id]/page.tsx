@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
+import { OrderStatus, OrderStatusLabel } from "@/constants/orderStatus";
 
 export default function OrderDetailPage() {
   const params = useParams();
@@ -37,7 +38,9 @@ export default function OrderDetailPage() {
       <p className="mb-4 text-gray-500">
         주문번호: {order.id} | 주문일:{" "}
         {new Date(order.created_at).toLocaleString()} | 상태:{" "}
-        <span className="font-semibold">{order.status}</span>
+        <span className="font-semibold">
+          {OrderStatusLabel[order.status as OrderStatus]}
+        </span>
       </p>
       <ul className="space-y-4">
         {order.order_items.map((item: any, idx: number) => (
