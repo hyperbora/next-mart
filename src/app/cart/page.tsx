@@ -15,7 +15,7 @@ export default function CartPage() {
   const { cartItems, setCartItems } = useCartStore();
   const [loading, setLoading] = useState(true);
   const { removeFromCart } = useCartSync();
-  const [confirmTarget, setConfirmTarget] = useState<number | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<number | null>(null);
 
   useEffect(() => {
     if (!session) {
@@ -36,19 +36,19 @@ export default function CartPage() {
   }, [session, setCartItems]);
 
   const handleRemove = async (productId: number) => {
-    setConfirmTarget(productId);
+    setRemoveTarget(productId);
   };
 
   const confirmRemove = async () => {
-    if (!session || confirmTarget === null) return;
+    if (!session || removeTarget === null) return;
     try {
-      await removeFromCart(confirmTarget);
+      await removeFromCart(removeTarget);
       toast.success("삭제되었습니다.");
     } catch (err) {
       console.error(err);
       toast.error("삭제 중 오류가 발생했습니다.");
     } finally {
-      setConfirmTarget(null);
+      setRemoveTarget(null);
     }
   };
 
@@ -83,13 +83,13 @@ export default function CartPage() {
       <h1 className="mb-6 text-2xl font-bold">장바구니</h1>
 
       {/* 모달 */}
-      {confirmTarget !== null && (
+      {removeTarget !== null && (
         <ConfirmModal
           title="장바구니 삭제"
           message="정말로 이 상품을 장바구니에서 삭제하시겠습니까?"
           confirmText="삭제"
           onConfirm={confirmRemove}
-          onCancel={() => setConfirmTarget(null)}
+          onCancel={() => setRemoveTarget(null)}
         />
       )}
 
