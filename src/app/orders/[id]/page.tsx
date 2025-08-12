@@ -53,7 +53,8 @@ export default function OrderDetailPage() {
       <h1 className="mb-6 text-2xl font-bold">주문 상세</h1>
       <p className="mb-4 text-gray-500">
         주문번호: {order?.id} | 주문일:{" "}
-        {new Date(order?.created_at!).toLocaleString()} | 상태:{" "}
+        {order?.created_at ? new Date(order.created_at).toLocaleString() : "-"}{" "}
+        | 상태:{" "}
         <span className="font-semibold">
           {OrderStatusLabel[order?.status as OrderStatus]}
         </span>
