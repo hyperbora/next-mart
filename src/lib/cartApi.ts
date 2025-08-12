@@ -13,10 +13,12 @@ export async function getCartItemsByUser(userId: string) {
 
   const cartItemsWithProduct: CartItemsWithProduct = data;
   return cartItemsWithProduct.map((item) => {
-    return {
-      ...item,
-      product: Array.isArray(item.products) ? item.products[0] : item.products,
+    const { products, ...rest } = item;
+    const newItem = {
+      ...rest,
+      product: Array.isArray(products) ? products[0] : products,
     };
+    return newItem;
   });
 }
 
