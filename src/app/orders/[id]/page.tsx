@@ -5,9 +5,25 @@ import { useParams } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
 import { OrderStatus, OrderStatusLabel } from "@/constants/orderStatus";
 
+type OrderItem = {
+  product: {
+    title: string;
+    price: number;
+    image_url: string;
+  };
+  quantity: number;
+};
+
+type Order = {
+  id: number;
+  status: string;
+  created_at: string;
+  order_items: OrderItem[];
+};
+
 export default function OrderDetailPage() {
   const params = useParams();
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -36,28 +52,28 @@ export default function OrderDetailPage() {
     <div className="max-w-3xl p-6 mx-auto">
       <h1 className="mb-6 text-2xl font-bold">주문 상세</h1>
       <p className="mb-4 text-gray-500">
-        주문번호: {order.id} | 주문일:{" "}
-        {new Date(order.created_at).toLocaleString()} | 상태:{" "}
+        주문번호: {order?.id} | 주문일:{" "}
+        {new Date(order?.created_at!).toLocaleString()} | 상태:{" "}
         <span className="font-semibold">
-          {OrderStatusLabel[order.status as OrderStatus]}
+          {OrderStatusLabel[order?.status as OrderStatus]}
         </span>
       </p>
       <ul className="space-y-4">
-        {order.order_items.map((item: any, idx: number) => (
+        {order?.order_items.map((item: OrderItem, idx: number) => (
           <li
             key={idx}
             className="flex items-center gap-4 p-4 bg-white border rounded-md"
           >
             <LoadingImage
-              src={item.product?.image_url || "/file.svg"}
-              alt={item.product?.title || "상품 이미지"}
+              src={item.product.image_url || "/file.svg"}
+              alt={item.product.title || "상품 이미지"}
               width={80}
               height={80}
               className="object-contain rounded-md"
             />
             <div className="flex-1">
-              <p className="font-semibold">{item.product?.title}</p>
-              <p>₩{item.product?.price.toLocaleString()}</p>
+              <p className="font-semibold">{item.product.title}</p>
+              <p>₩{item.product.price.toLocaleString()}</p>
               <p>수량: {item.quantity}</p>
             </div>
           </li>
