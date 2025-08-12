@@ -36,8 +36,8 @@ export default function OrderDetailPage() {
           throw new Error(data.error || "주문 조회 실패");
         }
         setOrder(data.order);
-      } catch (err: any) {
-        setErrorMsg(err.message);
+      } catch (err) {
+        setErrorMsg(err instanceof Error ? err.message : String(err));
       } finally {
         setLoading(false);
       }
