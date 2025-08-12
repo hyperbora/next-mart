@@ -5,6 +5,8 @@ import React from "react";
 interface ConfirmModalProps {
   title?: string;
   message: string;
+  confirmText?: string;
+  cancelText?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -12,6 +14,8 @@ interface ConfirmModalProps {
 export default function ConfirmModal({
   title = "확인",
   message,
+  confirmText = "확인",
+  cancelText = "취소",
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
@@ -23,15 +27,15 @@ export default function ConfirmModal({
         <div className="flex justify-end gap-2">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-gray-600 rounded hover:bg-gray-100"
+            className="px-4 py-2 text-gray-600 rounded hover:bg-gray-100 cursor-pointer"
           >
-            취소
+            {cancelText}
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+            className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer"
           >
-            삭제
+            {confirmText}
           </button>
         </div>
       </div>

@@ -87,6 +87,7 @@ export default function CartPage() {
         <ConfirmModal
           title="장바구니 삭제"
           message="정말로 이 상품을 장바구니에서 삭제하시겠습니까?"
+          confirmText="삭제"
           onConfirm={confirmRemove}
           onCancel={() => setConfirmTarget(null)}
         />
