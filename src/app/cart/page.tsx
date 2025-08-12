@@ -8,12 +8,14 @@ import { useCartSync } from "@/lib/cartSync";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import LoadingImage from "@/components/LoadingImage";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function CartPage() {
   const session = useAppStore((state) => state.session);
   const { cartItems, setCartItems } = useCartStore();
   const [loading, setLoading] = useState(true);
   const { removeFromCart } = useCartSync();
+  const [confirmTarget, setConfirmTarget] = useState<number | null>(null);
 
   useEffect(() => {
     if (!session) {
@@ -34,13 +36,19 @@ export default function CartPage() {
   }, [session, setCartItems]);
 
   const handleRemove = async (productId: number) => {
-    if (!session) return;
+    setConfirmTarget(productId);
+  };
+
+  const confirmRemove = async () => {
+    if (!session || confirmTarget === null) return;
     try {
-      await removeFromCart(productId);
+      await removeFromCart(confirmTarget);
       toast.success("삭제되었습니다.");
     } catch (err) {
       console.error(err);
       toast.error("삭제 중 오류가 발생했습니다.");
+    } finally {
+      setConfirmTarget(null);
     }
   };
 
@@ -73,6 +81,17 @@ export default function CartPage() {
   return (
     <div className="max-w-3xl p-6 mx-auto">
       <h1 className="mb-6 text-2xl font-bold">장바구니</h1>
+
+      {/* 모달 */}
+      {confirmTarget !== null && (
+        <ConfirmModal
+          title="장바구니 삭제"
+          message="정말로 이 상품을 장바구니에서 삭제하시겠습니까?"
+          onConfirm={confirmRemove}
+          onCancel={() => setConfirmTarget(null)}
+        />
+      )}
+
       <ul className="space-y-4">
         {cartItems.map((item) => (
           <li
