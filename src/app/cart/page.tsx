@@ -70,6 +70,7 @@ export default function CartPage() {
       });
       const data = await res.json();
       if (res.ok) {
+        setCartItems([]);
         toast.success("주문이 생성되었습니다.");
         router.push(`/orders/${data.order_id}`);
       } else {

@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseServer";
+import { getCartItemsByUser } from "./cartApi";
 
 export interface Order {
   id: number;
@@ -19,6 +20,38 @@ export interface OrderWithItems {
       image_url: string;
     };
   }[];
+}
+
+export interface OrderError extends Error {
+  readonly status: number;
+}
+
+export abstract class OrderBaseError extends Error implements OrderError {
+  readonly status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = this.constructor.name;
+    this.status = status;
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
+
+export class OrderMissingUserIdError extends OrderBaseError {
+  constructor() {
+    super("user_id가 필요합니다.", 400);
+  }
+}
+
+export class OrderEmptyCartError extends OrderBaseError {
+  constructor() {
+    super("장바구니가 비어 있습니다.", 400);
+  }
+}
+
+export function isOrderError(error: any): error is OrderError {
+  return "status" in error && typeof error.status === "number";
 }
 
 export async function getAllOrders(): Promise<Order[]> {
@@ -73,4 +106,48 @@ export async function getOrderById(id: number): Promise<OrderWithItems> {
     order_items: newOrderItems,
   };
   return newData as OrderWithItems;
+}
+
+export async function createOrder(user_id: string): Promise<number> {
+  if (!user_id) {
+    throw new OrderMissingUserIdError();
+  }
+  const cartItems = await getCartItemsByUser(user_id);
+  if (!cartItems || cartItems.length === 0) {
+    throw new OrderEmptyCartError();
+  }
+  const totalAmount = cartItems.reduce((sum, item) => {
+    return sum + item.quantity * item.product.price;
+  }, 0);
+  const { data: order, error: orderError } = await supabase
+    .from("orders")
+    .insert([{ user_id, total_amount: totalAmount }])
+    .select()
+    .single();
+  if (orderError) {
+    throw orderError;
+  }
+  const orderItems = cartItems.map((item) => ({
+    order_id: order.id,
+    product_id: item.product_id,
+    quantity: item.quantity,
+    price: item.product.price,
+  }));
+
+  const { error: itemsError } = await supabase
+    .from("order_items")
+    .insert(orderItems);
+
+  if (itemsError) {
+    throw itemsError;
+  }
+  const { error: clearError } = await supabase
+    .from("cart_items")
+    .delete()
+    .eq("user_id", user_id);
+
+  if (clearError) {
+    throw clearError;
+  }
+  return order.id as number;
 }
