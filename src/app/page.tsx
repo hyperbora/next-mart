@@ -1,6 +1,6 @@
 import CategorySidebar from "@/components/CategorySidebar";
 import ProductItem from "@/components/ProductItem";
-import { getAllProducts } from "@/data/products";
+import { getAllProducts } from "@/lib/productApi";
 
 export default async function HomePage() {
   const products = await getAllProducts();

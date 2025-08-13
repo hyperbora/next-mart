@@ -1,4 +1,4 @@
-import { getProductById } from "@/data/products";
+import { getProductById } from "@/lib/productApi";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
 
