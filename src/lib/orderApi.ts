@@ -59,10 +59,11 @@ export function isOrderError(error: unknown): error is OrderError {
   );
 }
 
-export async function getAllOrders(): Promise<Order[]> {
+export async function getAllOrders(user_id: string): Promise<Order[]> {
   const { data, error } = await supabase
     .from("orders")
     .select("id, status, created_at, total_amount")
+    .eq("user_id", user_id)
     .order("created_at", { ascending: false });
 
   if (error) {

@@ -25,8 +25,9 @@ export default function OrdersPage() {
     (async () => {
       try {
         const res = await fetch("/api/orders/list", {
-          method: "GET",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: session.user.id }),
         });
         const data = await res.json();
         if (res.ok) {
