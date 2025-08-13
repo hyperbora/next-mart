@@ -1,15 +1,13 @@
-import { supabase } from "@/lib/supabaseServer";
+import { getAllOrders } from "@/lib/orderApi";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const { data, error } = await supabase
-    .from("orders")
-    .select("id, status, created_at, total_amount")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    const data = await getAllOrders();
+    return NextResponse.json({ orders: data });
+  } catch (error) {
+    console.error("주문 조회 실패:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-
-  return NextResponse.json({ orders: data });
 }
