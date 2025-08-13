@@ -7,7 +7,7 @@ import { getCartItemsByUser } from "@/lib/cartApi";
 import { useAppStore } from "@/store/useAppStore";
 import Link from "next/link";
 
-export default async function CheckoutPage() {
+export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const session = useAppStore((state) => state.session);
   const router = useRouter();
@@ -61,11 +61,13 @@ export default async function CheckoutPage() {
     );
   }
 
-  const cartItems = await getCartItemsByUser(session.user.id);
-  const total_amount = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
+  const total_amount = (async () => {
+    const cartItems = await getCartItemsByUser(session.user.id);
+    return cartItems.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+  })();
 
   return (
     <div className="p-6">
