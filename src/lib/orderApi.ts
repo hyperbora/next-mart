@@ -50,8 +50,13 @@ export class OrderEmptyCartError extends OrderBaseError {
   }
 }
 
-export function isOrderError(error: any): error is OrderError {
-  return "status" in error && typeof error.status === "number";
+export function isOrderError(error: unknown): error is OrderError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    typeof (error as OrderError).status === "number"
+  );
 }
 
 export async function getAllOrders(): Promise<Order[]> {
