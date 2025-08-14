@@ -1,7 +1,7 @@
 import { getAllOrders } from "@/lib/orderApi";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const data = await getAllOrders();
     return NextResponse.json({ orders: data });
