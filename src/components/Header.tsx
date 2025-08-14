@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";

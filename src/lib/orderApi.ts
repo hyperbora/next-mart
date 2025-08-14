@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabaseServer";
+import { createClient } from "@/utils/supabase/server";
 import { getCartItemsByUser } from "./cartApi";
 
 export interface Order {

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 
 export interface Product {
   id: number;

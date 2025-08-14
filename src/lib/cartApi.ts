@@ -1,5 +1,5 @@
 import { QueryData } from "@supabase/supabase-js";
-import { createClient } from "./supabaseClient";
+import { createClient } from "../utils/supabase/client";
 
 export async function getCartItemsByUser(userId: string) {
   const supabase = createClient();

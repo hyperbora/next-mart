@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabaseClient";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
