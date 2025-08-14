@@ -1,5 +1,6 @@
 import { getOrderById } from "@/lib/orderApi";
 import { NextResponse } from "next/server";
+import { getErrorMessage } from "@/utils";
 
 export async function GET(
   request: Request,
@@ -13,10 +14,7 @@ export async function GET(
     }
     return NextResponse.json({ order: data });
   } catch (error) {
-    const errorMessage =
-      typeof error === "object" && error !== null && "message" in error
-        ? error.message
-        : String(error);
+    const errorMessage = getErrorMessage(error);
     console.error(request, errorMessage);
     return NextResponse.json({ error: "권한이 없습니다." }, { status: 400 });
   }
