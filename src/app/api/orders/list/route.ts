@@ -1,10 +1,9 @@
 import { getAllOrders } from "@/lib/orderApi";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
-    const { user_id } = await req.json();
-    const data = await getAllOrders(user_id);
+    const data = await getAllOrders();
     return NextResponse.json({ orders: data });
   } catch (error) {
     console.error("주문 조회 실패:", error);
