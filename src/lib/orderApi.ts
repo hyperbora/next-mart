@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabaseServer";
+import { createClient } from "@/lib/supabaseServer";
 import { getCartItemsByUser } from "./cartApi";
 
 export interface Order {
@@ -8,18 +8,20 @@ export interface Order {
   total_amount: number;
 }
 
+export interface OrderItem {
+  quantity: number;
+  product: {
+    title: string;
+    price: number;
+    image_url: string;
+  };
+}
+
 export interface OrderWithItems {
   id: number;
   status: string;
   created_at: string;
-  order_items: {
-    quantity: number;
-    product: {
-      title: string;
-      price: number;
-      image_url: string;
-    };
-  }[];
+  order_items: OrderItem[];
 }
 
 export interface OrderError extends Error {
@@ -60,6 +62,7 @@ export function isOrderError(error: unknown): error is OrderError {
 }
 
 export async function getAllOrders(user_id: string): Promise<Order[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("orders")
     .select("id, status, created_at, total_amount")
@@ -74,6 +77,7 @@ export async function getAllOrders(user_id: string): Promise<Order[]> {
 }
 
 export async function getOrderById(id: number): Promise<OrderWithItems> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("orders")
     .select(
@@ -122,9 +126,10 @@ export async function createOrder(user_id: string): Promise<number> {
   if (!cartItems || cartItems.length === 0) {
     throw new OrderEmptyCartError();
   }
-  const totalAmount = cartItems.reduce((sum, item) => {
+  const totalAmount = cartItems.reduce((sum: number, item: OrderItem) => {
     return sum + item.quantity * item.product.price;
   }, 0);
+  const supabase = await createClient();
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert([{ user_id, total_amount: totalAmount }])

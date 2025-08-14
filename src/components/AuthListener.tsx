@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import { useAppStore } from "@/store/useAppStore";
 
 export default function AuthListener() {
   const setSession = useAppStore((state) => state.setSession);
 
   useEffect(() => {
+    const supabase = createClient();
     // 초기 세션 로드
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);

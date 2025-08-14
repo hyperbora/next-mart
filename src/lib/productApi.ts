@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 
 export interface Product {
   id: number;
@@ -12,6 +12,7 @@ export interface Product {
 
 // 전체 상품 조회
 export async function getAllProducts(): Promise<Product[]> {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -27,6 +28,7 @@ export async function getAllProducts(): Promise<Product[]> {
 
 // ID로 상품 조회
 export async function getProductById(id: number): Promise<Product | null> {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")

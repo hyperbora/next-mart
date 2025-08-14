@@ -1,7 +1,8 @@
 import { QueryData } from "@supabase/supabase-js";
-import { supabase } from "./supabaseClient";
+import { createClient } from "./supabaseClient";
 
 export async function getCartItemsByUser(userId: string) {
+  const supabase = createClient();
   const cartItemsWithProductQuery = supabase
     .from("cart_items")
     .select("product_id, quantity, products(title, price, image_url)")
@@ -27,6 +28,7 @@ export async function upsertCartItem(
   productId: number,
   quantity: number
 ) {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("cart_items")
     .upsert(
@@ -38,6 +40,7 @@ export async function upsertCartItem(
 }
 
 export async function deleteCartItem(userId: string, productId: number) {
+  const supabase = createClient();
   const { error } = await supabase
     .from("cart_items")
     .delete()
@@ -47,6 +50,7 @@ export async function deleteCartItem(userId: string, productId: number) {
 }
 
 export async function getCartItem(userId: string, productId: number) {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("cart_items")
     .select("product_id, quantity")

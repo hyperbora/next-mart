@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import { useAppStore } from "@/store/useAppStore";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
@@ -48,6 +48,7 @@ export default function Header() {
 
   const menus = useMemo(() => {
     const handleLogout = async () => {
+      const supabase = createClient();
       await supabase.auth.signOut();
       setTimeout(() => router.push("/"), 1000);
     };

@@ -13,7 +13,11 @@ export async function GET(
     }
     return NextResponse.json({ order: data });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: errorMessage }, { status: 400 });
+    const errorMessage =
+      typeof error === "object" && error !== null && "message" in error
+        ? error.message
+        : String(error);
+    console.error(request, errorMessage);
+    return NextResponse.json({ error: "권한이 없습니다." }, { status: 400 });
   }
 }
