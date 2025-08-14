@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createOrder, isOrderError } from "@/lib/orderApi";
+import { getErrorMessage } from "@/utils";
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (err) {
-    console.error(err);
+    console.error(getErrorMessage(err));
     let error;
     let status;
     if (isOrderError(err)) {

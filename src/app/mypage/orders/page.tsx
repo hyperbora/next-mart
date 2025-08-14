@@ -5,6 +5,7 @@ import { useAppStore } from "@/store/useAppStore";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { OrderStatus, OrderStatusLabel } from "@/constants/orderStatus";
+import { getErrorMessage } from "@/utils";
 
 interface Order {
   id: number;
@@ -36,7 +37,7 @@ export default function OrdersPage() {
           throw new Error(data.error);
         }
       } catch (err) {
-        console.error(err);
+        console.error(getErrorMessage(err));
         toast.error("주문 내역을 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);

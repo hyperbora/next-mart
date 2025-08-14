@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
 import ConfirmModal from "@/components/ConfirmModal";
+import { getErrorMessage } from "@/utils";
 
 export default function CartPage() {
   const session = useAppStore((state) => state.session);
@@ -31,7 +32,7 @@ export default function CartPage() {
         const data = await getCartItemsByUser(session.user.id);
         setCartItems(data);
       } catch (err) {
-        console.error(err);
+        console.error(getErrorMessage(err));
         toast.error("장바구니를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
@@ -49,7 +50,7 @@ export default function CartPage() {
       await removeFromCart(removeTarget);
       toast.success("삭제되었습니다.");
     } catch (err) {
-      console.error(err);
+      console.error(getErrorMessage(err));
       toast.error("삭제 중 오류가 발생했습니다.");
     } finally {
       setRemoveTarget(null);

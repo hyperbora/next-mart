@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
 import { OrderStatus, OrderStatusLabel } from "@/constants/orderStatus";
+import { getErrorMessage } from "@/utils";
 
 type OrderItem = {
   product: {
@@ -37,7 +38,7 @@ export default function OrderDetailPage() {
         }
         setOrder(data.order);
       } catch (err) {
-        setErrorMsg(err instanceof Error ? err.message : String(err));
+        setErrorMsg(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
