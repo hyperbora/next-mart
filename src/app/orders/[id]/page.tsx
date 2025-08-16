@@ -5,9 +5,11 @@ import { useParams } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
 import { OrderStatus, OrderStatusLabel } from "@/constants/orderStatus";
 import { getErrorMessage } from "@/utils";
+import TextLink from "@/components/common/TextLink";
 
 type OrderItem = {
   product: {
+    id: number;
     title: string;
     price: number;
     image_url: string;
@@ -74,7 +76,12 @@ export default function OrderDetailPage() {
               className="object-contain rounded-md"
             />
             <div className="flex-1">
-              <p className="font-semibold">{item.product.title}</p>
+              <TextLink
+                href={`/product/${item.product.id}`}
+                className="font-semibold"
+              >
+                {item.product.title}
+              </TextLink>
               <p>₩{item.product.price.toLocaleString()}</p>
               <p>수량: {item.quantity}</p>
             </div>

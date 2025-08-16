@@ -87,6 +87,7 @@ export async function getOrderById(id: number): Promise<OrderWithItems> {
       order_items (
         quantity,
         products (
+          id,
           title,
           price,
           image_url
