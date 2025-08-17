@@ -21,6 +21,7 @@ export interface OrderWithItems {
   id: number;
   status: string;
   created_at: string;
+  total_amount: number;
   order_items: OrderItem[];
 }
 
@@ -84,6 +85,7 @@ export async function getOrderById(id: number): Promise<OrderWithItems> {
       id,
       status,
       created_at,
+      total_amount,
       order_items (
         quantity,
         products (

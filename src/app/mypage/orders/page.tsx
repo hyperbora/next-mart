@@ -6,10 +6,12 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { OrderStatus, OrderStatusLabel } from "@/constants/orderStatus";
 import { getErrorMessage } from "@/utils";
+import TextLink from "@/components/common/TextLink";
 
 interface Order {
   id: number;
   status: string;
+  total_amount: number;
   created_at: string;
 }
 
@@ -77,7 +79,7 @@ export default function OrdersPage() {
         {orders.map((order) => (
           <li
             key={order.id}
-            className="flex items-center justify-between p-4 bg-white border rounded-md hover:shadow-md transition"
+            className="flex items-center justify-between p-4 transition bg-white border rounded-md hover:shadow-md"
           >
             <div>
               <p className="font-semibold">주문번호: {order.id}</p>
@@ -87,13 +89,16 @@ export default function OrdersPage() {
               <p className="text-sm">
                 상태: {OrderStatusLabel[order.status as OrderStatus]}
               </p>
+              <p className="text-sm text-gray-500">
+                주문금액: {order.total_amount.toLocaleString()}원
+              </p>
             </div>
-            <Link
+            <TextLink
               href={`/orders/${order.id}`}
               className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
             >
               상세보기
-            </Link>
+            </TextLink>
           </li>
         ))}
       </ul>

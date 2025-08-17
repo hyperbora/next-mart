@@ -21,6 +21,7 @@ type Order = {
   id: number;
   status: string;
   created_at: string;
+  total_amount: number;
   order_items: OrderItem[];
 };
 
@@ -60,7 +61,8 @@ export default function OrderDetailPage() {
         | 상태:{" "}
         <span className="font-semibold">
           {OrderStatusLabel[order?.status as OrderStatus]}
-        </span>
+        </span>{" "}
+        | 주문금액: {order?.total_amount.toLocaleString()}원
       </p>
       <ul className="space-y-4">
         {order?.order_items.map((item: OrderItem, idx: number) => (
