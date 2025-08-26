@@ -16,7 +16,7 @@ export default function CartPage() {
   const session = useAppStore((state) => state.session);
   const { cartItems, setCartItems } = useCartStore();
   const [loading, setLoading] = useState(true);
-  const { removeFromCart } = useCartSync();
+  const { removeFromCart, updateCartQuantity } = useCartSync();
   const [removeTarget, setRemoveTarget] = useState<number | null>(null);
   const [creatingOrder, setCreatingOrder] = useState(false);
   const [confirmOrder, setConfirmOrder] = useState(false);
@@ -171,6 +171,32 @@ export default function CartPage() {
                   </Link>
                   <p>₩{item.product?.price.toLocaleString()}</p>
                   <p>수량: {item.quantity}</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => {
+                      updateCartQuantity({
+                        ...item,
+                        quantity: item.quantity - 1,
+                      });
+                    }}
+                    className="w-10 h-10 flex items-center justify-center border rounded-full text-xl font-bold disabled:opacity-50 hover:bg-gray-100 cursor-pointer"
+                    disabled={item.quantity <= 1}
+                  >
+                    -
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button
+                    onClick={() => {
+                      updateCartQuantity({
+                        ...item,
+                        quantity: item.quantity + 1,
+                      });
+                    }}
+                    className="w-10 h-10 flex items-center justify-center border rounded-full text-xl font-bold disabled:opacity-50 hover:bg-gray-100 cursor-pointer"
+                  >
+                    +
+                  </button>
                 </div>
                 <button
                   onClick={() => handleRemove(item.product_id)}

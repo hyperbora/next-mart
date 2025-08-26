@@ -1,12 +1,15 @@
 import { upsertCartItem, deleteCartItem, getCartItem } from "@/lib/cartApi";
 import { useAppStore } from "@/store/useAppStore";
 import { useCartStore } from "@/store/useCartStore";
-import { type Product } from "@/store/useCartStore";
+import { type Product, type CartItem } from "@/store/useCartStore";
 
 export function useCartSync() {
   const session = useAppStore((state) => state.session);
   const addToCartStore = useCartStore((state) => state.addToCart);
   const removeFromCartStore = useCartStore((state) => state.removeFromCart);
+  const updateCartQuantityStore = useCartStore(
+    (state) => state.updateCartQuantity
+  );
 
   // 장바구니에 아이템 추가 및 DB 동기화
   async function addToCart(item: {
@@ -41,5 +44,14 @@ export function useCartSync() {
     }
   }
 
-  return { addToCart, removeFromCart };
+  async function updateCartQuantity(item: CartItem) {
+    const newItem = { ...item, quantity: Math.max(item.quantity, 1) };
+    updateCartQuantityStore(newItem);
+    if (!session) {
+      return;
+    }
+    await upsertCartItem(session.user.id, newItem.product_id, newItem.quantity);
+  }
+
+  return { addToCart, removeFromCart, updateCartQuantity };
 }
