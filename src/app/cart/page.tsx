@@ -170,7 +170,6 @@ export default function CartPage() {
                     <p className="font-semibold">{item.product?.title}</p>
                   </Link>
                   <p>₩{item.product?.price.toLocaleString()}</p>
-                  <p>수량: {item.quantity}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <button
@@ -185,7 +184,34 @@ export default function CartPage() {
                   >
                     -
                   </button>
-                  <span>{item.quantity}</span>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min={1}
+                    max={999}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "") {
+                        // 빈 값은 일단 허용 (실시간 업데이트 X)
+                        return;
+                      }
+
+                      let num = Number(value);
+                      if (isNaN(num)) return;
+
+                      if (num < 1) num = 1;
+                      if (num > 999) num = 999;
+
+                      updateCartQuantity({ ...item, quantity: num });
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value === "") {
+                        // 포커스 아웃 시 빈칸 → 최소값 1로 보정
+                        updateCartQuantity({ ...item, quantity: 1 });
+                      }
+                    }}
+                    className="w-16 text-center border rounded-md text-lg"
+                  />
                   <button
                     onClick={() => {
                       updateCartQuantity({
