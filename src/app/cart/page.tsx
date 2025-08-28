@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import LoadingImage from "@/components/LoadingImage";
 import ConfirmModal from "@/components/ConfirmModal";
 import { getErrorMessage } from "@/utils";
+import NumberInput from "@/components/common/NumberInput";
 
 export default function CartPage() {
   const session = useAppStore((state) => state.session);
@@ -171,59 +172,12 @@ export default function CartPage() {
                   </Link>
                   <p>₩{item.product?.price.toLocaleString()}</p>
                 </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => {
-                      updateCartQuantity({
-                        ...item,
-                        quantity: item.quantity - 1,
-                      });
-                    }}
-                    className="w-10 h-10 flex items-center justify-center border rounded-full text-xl font-bold disabled:opacity-50 hover:bg-gray-100 cursor-pointer"
-                    disabled={item.quantity <= 1}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    value={item.quantity}
-                    min={1}
-                    max={999}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value === "") {
-                        // 빈 값은 일단 허용 (실시간 업데이트 X)
-                        return;
-                      }
-
-                      let num = Number(value);
-                      if (isNaN(num)) return;
-
-                      if (num < 1) num = 1;
-                      if (num > 999) num = 999;
-
-                      updateCartQuantity({ ...item, quantity: num });
-                    }}
-                    onBlur={(e) => {
-                      if (e.target.value === "") {
-                        // 포커스 아웃 시 빈칸 → 최소값 1로 보정
-                        updateCartQuantity({ ...item, quantity: 1 });
-                      }
-                    }}
-                    className="w-16 text-center border rounded-md text-lg"
-                  />
-                  <button
-                    onClick={() => {
-                      updateCartQuantity({
-                        ...item,
-                        quantity: item.quantity + 1,
-                      });
-                    }}
-                    className="w-10 h-10 flex items-center justify-center border rounded-full text-xl font-bold disabled:opacity-50 hover:bg-gray-100 cursor-pointer"
-                  >
-                    +
-                  </button>
-                </div>
+                <NumberInput
+                  onChange={(value) =>
+                    updateCartQuantity({ ...item, quantity: value })
+                  }
+                  value={item.quantity}
+                />
                 <button
                   onClick={() => handleRemove(item.product_id)}
                   className="px-3 py-1 text-lg text-red-600 transition-colors cursor-pointer "
