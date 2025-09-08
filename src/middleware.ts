@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { User } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import { checkAdmin } from "./utils/auth";
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -47,18 +48,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (adminPage(request)) {
-    const { data: roles } = await supabase
-      .from("roles")
-      .select("role")
-      .eq("user_id", user!.id);
-
-    const roleList = roles?.map((r) => r.role) || [];
-    if (!roleList.includes("admin")) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/error";
-      return NextResponse.redirect(url);
-    }
+  if (adminPage(request) && !(await checkAdmin(user!.id))) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/error";
+    return NextResponse.redirect(url);
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

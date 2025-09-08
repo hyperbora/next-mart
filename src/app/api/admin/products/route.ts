@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getErrorMessage } from "@/utils";
 import { createServerClient } from "@/utils/supabase/server";
 import { createProduct, Product } from "@/lib/productApi";
+import { checkAdmin } from "@/utils/auth";
 
 export async function POST(req: Request) {
   try {
@@ -25,12 +26,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "인증 실패" }, { status: 401 });
     }
 
-    const { data: roles } = await supabase
-      .from("roles")
-      .select("role")
-      .eq("user_id", user.id);
-
-    if (!roles?.some((r) => r.role === "admin")) {
+    if (!(await checkAdmin(user!.id))) {
       return NextResponse.json({ error: "권한 없음" }, { status: 403 });
     }
 
