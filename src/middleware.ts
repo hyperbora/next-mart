@@ -75,17 +75,23 @@ export async function middleware(request: NextRequest) {
 }
 
 async function invalidAdminPageAccess(request: NextRequest, user: User | null) {
-  return (
-    request.nextUrl.pathname.startsWith("/admin") &&
-    (user === null || !(await checkAdmin(user.id)))
-  );
+  if (!request.nextUrl.pathname.startsWith("/admin")) {
+    return false;
+  }
+  if (user === null) {
+    return true;
+  }
+  return !(await checkAdmin(user.id));
 }
 
 async function invalidAdminApiAccess(request: NextRequest, user: User | null) {
-  return (
-    request.nextUrl.pathname.startsWith("/api/admin") &&
-    (user === null || !(await checkAdmin(user.id)))
-  );
+  if (!request.nextUrl.pathname.startsWith("/api/admin")) {
+    return false;
+  }
+  if (user === null) {
+    return true;
+  }
+  return !(await checkAdmin(user.id));
 }
 
 function loginRequired(user: User | null, request: NextRequest) {
