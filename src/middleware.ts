@@ -48,13 +48,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (await invalidAdminPageAccess(request, user!.id)) {
+  if (await invalidAdminPageAccess(request, user)) {
     const url = request.nextUrl.clone();
     url.pathname = "/error";
     return NextResponse.redirect(url);
   }
 
-  if (await invalidAdminApiAccess(request, user!.id)) {
+  if (await invalidAdminApiAccess(request, user)) {
     throw new Error("권한이 없습니다.");
   }
 
@@ -74,16 +74,17 @@ export async function middleware(request: NextRequest) {
   return supabaseResponse;
 }
 
-async function invalidAdminPageAccess(request: NextRequest, userId: string) {
+async function invalidAdminPageAccess(request: NextRequest, user: User | null) {
   return (
-    request.nextUrl.pathname.startsWith("/admin") && !(await checkAdmin(userId))
+    request.nextUrl.pathname.startsWith("/admin") &&
+    (user === null || !(await checkAdmin(user.id)))
   );
 }
 
-async function invalidAdminApiAccess(request: NextRequest, userId: string) {
+async function invalidAdminApiAccess(request: NextRequest, user: User | null) {
   return (
     request.nextUrl.pathname.startsWith("/api/admin") &&
-    !(await checkAdmin(userId))
+    (user === null || !(await checkAdmin(user.id)))
   );
 }
 
