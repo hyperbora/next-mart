@@ -1,4 +1,3 @@
-// /Users/hyperbora/Documents/study/react/next-mart/src/utils/auth.ts
 import { createServerClient } from "@/utils/supabase/server";
 
 /**
