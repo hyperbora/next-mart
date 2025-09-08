@@ -21,7 +21,7 @@ export default function AdminNewProductPage() {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/products/new", {
+      const res = await fetch("/api/admin/products", {
         method: "POST",
         body: JSON.stringify({
           title,
@@ -33,9 +33,11 @@ export default function AdminNewProductPage() {
       });
       if (res.ok) {
         toast.success("상품이 등록되었습니다!");
-        router.push("/admin/products");
+        const { productId } = await res.json();
+        router.push(`/product/${productId}`);
       } else {
-        toast.error("상품 등록에 실패했습니다.");
+        const { error } = await res.json();
+        toast.error(error);
       }
     } catch (err) {
       toast.error(getErrorMessage(err));
