@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { User } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
@@ -39,21 +40,14 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/error") &&
-    !request.nextUrl.pathname.startsWith("/product") &&
-    !(request.nextUrl.pathname === "/")
-  ) {
+  if (loginRequired(user, request)) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (request.nextUrl.pathname.startsWith("/admin")) {
+  if (adminPage(request)) {
     const { data: roles } = await supabase
       .from("roles")
       .select("role")
@@ -81,6 +75,21 @@ export async function middleware(request: NextRequest) {
   // of sync and terminate the user's session prematurely!
 
   return supabaseResponse;
+}
+
+function adminPage(request: NextRequest) {
+  return request.nextUrl.pathname.startsWith("/admin");
+}
+
+function loginRequired(user: User | null, request: NextRequest) {
+  return (
+    !user &&
+    !request.nextUrl.pathname.startsWith("/login") &&
+    !request.nextUrl.pathname.startsWith("/auth") &&
+    !request.nextUrl.pathname.startsWith("/error") &&
+    !request.nextUrl.pathname.startsWith("/product") &&
+    !(request.nextUrl.pathname === "/")
+  );
 }
 
 export const config = {
