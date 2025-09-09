@@ -6,6 +6,8 @@ import { useAppStore } from "@/store/useAppStore";
 
 export default function AuthListener() {
   const setSession = useAppStore((state) => state.setSession);
+  const checkAdmin = useAppStore((state) => state.checkAdmin);
+  const setIsAdmin = useAppStore((state) => state.setIsAdmin);
 
   useEffect(() => {
     const supabase = createClient();
@@ -18,13 +20,22 @@ export default function AuthListener() {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
+
+        if (!session?.user?.id) {
+          setIsAdmin(false);
+          return;
+        }
+
+        (async () => {
+          await checkAdmin(session.user.id);
+        })();
       }
     );
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [setSession]);
+  }, [setSession, checkAdmin]);
 
   return null;
 }

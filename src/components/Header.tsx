@@ -8,9 +8,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import ConfirmModal from "./ConfirmModal";
+import { getErrorMessage } from "@/utils";
 
 export default function Header() {
   const session = useAppStore((state) => state.session);
+  const isAdmin = useAppStore((state) => state.isAdmin);
   const isSidebarOpen = useAppStore((state) => state.isSidebarOpen);
   const toggleSidebar = useAppStore((state) => state.toggleSidebar);
   const router = useRouter();
@@ -51,10 +53,16 @@ export default function Header() {
 
   const handleLogout = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
-    setLogoutModalOpen(false);
-    toast.success("로그아웃 되었습니다. 홈으로 이동합니다.");
-    setTimeout(() => router.push("/"), 1000);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast.success("로그아웃 되었습니다. 홈으로 이동합니다.");
+      setTimeout(() => router.push("/"), 1000);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLogoutModalOpen(false);
+    }
   };
 
   const menus = useMemo(() => {
@@ -91,6 +99,12 @@ export default function Header() {
               </>
             ),
           },
+          ...(isAdmin
+            ? [
+                { type: "divider" },
+                { type: "link", href: "/admin", label: "관리자" },
+              ]
+            : []),
         ]
       : [
           { type: "link", href: "/login", label: "로그인" },
@@ -132,7 +146,7 @@ export default function Header() {
         )}
       </span>
     ));
-  }, [session, isSidebarOpen, toggleSidebar, router, totalCount]);
+  }, [session, isAdmin, isSidebarOpen, toggleSidebar, router, totalCount]);
 
   return (
     <header className="bg-white border-b shadow-sm">
