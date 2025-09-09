@@ -4,8 +4,10 @@ import { createClient } from "@/utils/supabase/client";
 import { useAppStore } from "@/store/useAppStore";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import ConfirmModal from "./ConfirmModal";
 
 export default function Header() {
   const session = useAppStore((state) => state.session);
@@ -15,6 +17,7 @@ export default function Header() {
 
   const cartItems = useCartStore((state) => state.cartItems);
   const totalCount = cartItems.length;
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -46,12 +49,15 @@ export default function Header() {
     };
   }, [isSidebarOpen]);
 
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setLogoutModalOpen(false);
+    toast.success("로그아웃 되었습니다. 홈으로 이동합니다.");
+    setTimeout(() => router.push("/"), 1000);
+  };
+
   const menus = useMemo(() => {
-    const handleLogout = async () => {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-      setTimeout(() => router.push("/"), 1000);
-    };
     const commonClass = "hover:text-green-600 transition-colors cursor-pointer";
 
     const items = session
@@ -61,7 +67,13 @@ export default function Header() {
             label: `${session.user.user_metadata.full_name} 님`,
           },
           { type: "divider" },
-          { type: "button", label: "로그아웃", onClick: handleLogout },
+          {
+            type: "button",
+            label: "로그아웃",
+            onClick: () => {
+              setLogoutModalOpen(true);
+            },
+          },
           { type: "divider" },
           { type: "link", href: "/mypage", label: "마이페이지" },
           { type: "divider" },
@@ -136,6 +148,18 @@ export default function Header() {
         <nav className="items-center hidden space-x-4 text-gray-700 md:flex">
           {menus}
         </nav>
+        {logoutModalOpen && (
+          <ConfirmModal
+            title="로그아웃"
+            message="로그아웃 하시겠습니까?"
+            onConfirm={() => {
+              handleLogout();
+            }}
+            onCancel={() => {
+              setLogoutModalOpen(false);
+            }}
+          />
+        )}
         <button
           className="p-2 rounded md:hidden hover:bg-gray-100"
           onClick={() => toggleSidebar()}
