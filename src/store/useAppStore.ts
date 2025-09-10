@@ -27,7 +27,7 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   isAdmin: false,
   setIsAdmin: (admin: boolean) => {
-    set((state) => ({ isAdmin: admin }));
+    set(() => ({ isAdmin: admin }));
   },
   checkAdmin: async (userId: string) => {
     const supabase = await createClient();
@@ -37,10 +37,8 @@ export const useAppStore = create<AppState>((set) => ({
       .eq("user_id", userId);
 
     if (!error && data?.some((r) => r.role === "admin")) {
-      console.log("checkAdmin: " + true);
       set({ isAdmin: true });
     } else {
-      console.log("checkAdmin: " + false);
       set({ isAdmin: false });
     }
   },
