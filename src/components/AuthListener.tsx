@@ -35,7 +35,7 @@ export default function AuthListener() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [setSession, checkAdmin]);
+  }, [setSession, checkAdmin, setIsAdmin]);
 
   return null;
 }

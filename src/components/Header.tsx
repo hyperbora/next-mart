@@ -146,7 +146,7 @@ export default function Header() {
         )}
       </span>
     ));
-  }, [session, isAdmin, isSidebarOpen, toggleSidebar, router, totalCount]);
+  }, [session, isAdmin, isSidebarOpen, toggleSidebar, totalCount]);
 
   return (
     <header className="bg-white border-b shadow-sm">
