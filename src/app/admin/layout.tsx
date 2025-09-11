@@ -6,7 +6,12 @@ import { usePathname } from "next/navigation";
 import { Menu, Box, ShoppingCart, Users, Settings, Home } from "lucide-react";
 
 const navItems = [
-  { href: "/admin", label: "대시보드", icon: <Box size={20} />, exact: true },
+  {
+    href: "/admin",
+    label: "대시보드",
+    icon: <Settings size={20} />,
+    exact: true,
+  },
   { href: "/admin/products", label: "상품 관리", icon: <Box size={20} /> },
   {
     href: "/admin/orders",
