@@ -1,4 +1,5 @@
 import CategorySidebar from "@/components/CategorySidebar";
+import MainBanner from "@/components/MainBanner";
 import ProductItem from "@/components/ProductItem";
 import { getAllProducts } from "@/lib/productApi";
 
@@ -15,8 +16,8 @@ export default async function HomePage() {
       {/* 메인 콘텐츠 */}
       <section className="col-span-8 p-4 space-y-6 bg-white rounded-md shadow">
         {/* 메인 배너 */}
-        <div className="flex items-center justify-center h-48 mb-6 text-2xl font-bold text-white bg-green-200 rounded-md">
-          메인 배너 영역
+        <div className="rounded-md">
+          <MainBanner />
         </div>
 
         {/* 추천 상품 */}
