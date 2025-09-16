@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Link from "next/link";
+import LoadingImage from "./LoadingImage";
 
 const banners = [
   { src: "https://picsum.photos/seed/product1/600/300", link: "/product/1" },
@@ -27,10 +28,12 @@ export default function MainBanner() {
         {banners.map((banner, idx) => (
           <SwiperSlide key={idx} className="w-full h-full">
             <Link href={banner.link}>
-              <img
+              <LoadingImage
                 src={banner.src}
                 alt={`배너 ${idx + 1}`}
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full"
+                width={600}
+                height={300}
               />
             </Link>
           </SwiperSlide>
