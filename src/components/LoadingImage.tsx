@@ -1,10 +1,25 @@
 "use client";
 
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ImageOff } from "lucide-react";
 
 export default function LoadingImage(props: ImageProps) {
   const [loading, setLoading] = useState(true);
+  const [timeout, setTimeoutReached] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setTimeoutReached(true), 10000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (timeout) {
+    return (
+      <div className="flex items-center justify-center w-full h-full text-gray-400">
+        <ImageOff size={32} />
+      </div>
+    );
+  }
 
   return (
     <>
