@@ -9,9 +9,15 @@ export default function LoadingImage(props: ImageProps) {
   const [timeout, setTimeoutReached] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setTimeoutReached(true), 10000);
+    if (!loading) return;
+
+    const timer = setTimeout(() => {
+      setTimeoutReached(true);
+      setLoading(false);
+    }, 10000);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading]);
 
   if (timeout) {
     return (
