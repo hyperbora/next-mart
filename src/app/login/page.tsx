@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import toast from "react-hot-toast";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -21,7 +22,7 @@ export default function LoginPage() {
     if (error) {
       setMessage(`로그인 실패: ${error.message}`);
     } else {
-      setMessage("로그인 성공! 메인 페이지로 이동합니다.");
+      toast.success("로그인 성공! 메인 페이지로 이동합니다.");
       setTimeout(() => router.push("/"), 1000);
     }
   };
