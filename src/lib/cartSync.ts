@@ -29,6 +29,8 @@ export function useCartSync() {
       } catch (error) {
         console.error("장바구니 DB 저장 실패", error);
       }
+    } else {
+      throw Error("로그인을 먼저 해주세요.");
     }
   }
 

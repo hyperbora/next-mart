@@ -3,6 +3,7 @@
 import { useCartSync } from "@/lib/cartSync";
 import LoadingImage from "@/components/LoadingImage";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "@/utils";
 
 interface ProductDetailClientProps {
   product: {
@@ -20,16 +21,20 @@ export default function ProductDetailClient({
   const { addToCart } = useCartSync();
 
   const handleAddToCart = async () => {
-    await addToCart({
-      product_id: product.id,
-      quantity: 1,
-      product: {
-        title: product.title,
-        price: product.price,
-        image_url: product.image_url || "/file.svg",
-      },
-    });
-    toast.success("장바구니에 담겼습니다!");
+    try {
+      await addToCart({
+        product_id: product.id,
+        quantity: 1,
+        product: {
+          title: product.title,
+          price: product.price,
+          image_url: product.image_url || "/file.svg",
+        },
+      });
+      toast.success("장바구니에 담겼습니다!");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   return (
@@ -54,7 +59,7 @@ export default function ProductDetailClient({
           {product.price.toLocaleString()}원
         </span>
         <button
-          className="px-6 py-2 text-white transition bg-green-600 rounded hover:bg-green-700"
+          className="px-6 py-2 text-white transition bg-green-600 rounded hover:bg-green-700 cursor-pointer"
           onClick={handleAddToCart}
         >
           장바구니 담기
