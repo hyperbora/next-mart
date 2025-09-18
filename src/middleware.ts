@@ -95,14 +95,13 @@ async function invalidAdminApiAccess(request: NextRequest, user: User | null) {
 }
 
 function loginRequired(user: User | null, request: NextRequest) {
-  return (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/error") &&
-    !request.nextUrl.pathname.startsWith("/product") &&
-    !(request.nextUrl.pathname === "/")
-  );
+  if (request.nextUrl.pathname === "/") {
+    return false;
+  }
+  if (user === null) {
+    return true;
+  }
+  return false;
 }
 
 export const config = {
@@ -114,6 +113,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|login|auth|error|product|signup).*)",
   ],
 };
