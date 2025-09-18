@@ -4,6 +4,7 @@ import { useCartSync } from "@/lib/cartSync";
 import LoadingImage from "@/components/LoadingImage";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils";
+import { useAppStore } from "@/store/useAppStore";
 
 interface ProductDetailClientProps {
   product: {
@@ -19,6 +20,7 @@ export default function ProductDetailClient({
   product,
 }: ProductDetailClientProps) {
   const { addToCart } = useCartSync();
+  const session = useAppStore((state) => state.session);
 
   const handleAddToCart = async () => {
     try {
@@ -58,12 +60,14 @@ export default function ProductDetailClient({
         <span className="text-xl font-semibold text-green-700">
           {product.price.toLocaleString()}원
         </span>
-        <button
-          className="px-6 py-2 text-white transition bg-green-600 rounded hover:bg-green-700 cursor-pointer"
-          onClick={handleAddToCart}
-        >
-          장바구니 담기
-        </button>
+        {session && (
+          <button
+            className="px-6 py-2 text-white transition bg-green-600 rounded hover:bg-green-700 cursor-pointer"
+            onClick={handleAddToCart}
+          >
+            장바구니 담기
+          </button>
+        )}
       </div>
     </div>
   );
