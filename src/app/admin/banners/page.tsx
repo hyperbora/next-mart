@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import LoadingImage from "@/components/LoadingImage";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/utils";
+import ConfirmModal from "@/components/ConfirmModal";
 
 interface Banner {
   id: number;
@@ -16,30 +19,70 @@ interface Banner {
 export default function BannersPage() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bannerDeleteModal, setBannerDeleteModal] = useState(false);
 
   useEffect(() => {
-    // TODO: API 연결 (GET /api/admin/banners)
-    // 임시 데이터
-    setBanners([
-      {
-        id: 1,
-        title: "테스트 배너 1",
-        image_url: "https://picsum.photos/seed/banner1/300/100",
-        link_url: "https://example.com",
-        is_active: true,
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        title: "테스트 배너 2",
-        image_url: "https://picsum.photos/seed/banner2/300/100",
-        link_url: "",
-        is_active: false,
-        created_at: new Date().toISOString(),
-      },
-    ]);
-    setLoading(false);
+    const fetchBanners = async () => {
+      try {
+        const res = await fetch("/api/admin/banners");
+        const data = await res.json();
+
+        if (res.ok) {
+          setBanners(data.banners || []);
+        } else {
+          toast.error(data.error || "배너 데이터를 불러오지 못했습니다.");
+          console.error(data.error || "배너 데이터를 불러오지 못했습니다.");
+        }
+      } catch (err) {
+        toast.error(getErrorMessage(err));
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBanners();
   }, []);
+
+  const handleToggle = async (id: number, currentStatus: boolean) => {
+    try {
+      const res = await fetch(`/api/admin/banners/${id}/toggle`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: !currentStatus }),
+      });
+
+      if (res.ok) {
+        setBanners((prev) =>
+          prev.map((b) =>
+            b.id === id ? { ...b, is_active: !currentStatus } : b
+          )
+        );
+        toast.success("배너 활성화/비활성화 전환이 성공하였습니다.");
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+      console.error(getErrorMessage(error));
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await fetch(`/api/admin/banners/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setBanners((prev) => prev.filter((b) => b.id !== id));
+        toast.success("배너가 삭제되었습니다.");
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+      console.error(getErrorMessage(error));
+    } finally {
+      setBannerDeleteModal(false);
+    }
+  };
 
   if (loading) return <p>불러오는 중...</p>;
 
@@ -95,7 +138,16 @@ export default function BannersPage() {
                 )}
               </td>
               <td className="p-2 border">
-                {banner.is_active ? "활성" : "비활성"}
+                <button
+                  onClick={() => handleToggle(banner.id, banner.is_active)}
+                  className={`px-2 py-1 text-sm rounded ${
+                    banner.is_active
+                      ? "bg-green-500 text-white hover:bg-green-600"
+                      : "bg-gray-300 text-black hover:bg-gray-400"
+                  }`}
+                >
+                  {banner.is_active ? "활성" : "비활성"}
+                </button>
               </td>
               <td className="p-2 border">
                 <div className="flex space-x-2">
@@ -105,7 +157,24 @@ export default function BannersPage() {
                   >
                     수정
                   </Link>
-                  <button className="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600">
+                  {bannerDeleteModal && (
+                    <ConfirmModal
+                      title="배너 삭제"
+                      message="정말 삭제하시겠습니까?"
+                      onConfirm={() => {
+                        handleDelete(banner.id);
+                      }}
+                      onCancel={() => {
+                        setBannerDeleteModal(false);
+                      }}
+                    />
+                  )}
+                  <button
+                    className="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+                    onClick={() => {
+                      setBannerDeleteModal(true);
+                    }}
+                  >
                     삭제
                   </button>
                 </div>
