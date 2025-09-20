@@ -3,7 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Box, ShoppingCart, Users, Settings, Home } from "lucide-react";
+import {
+  Menu,
+  Box,
+  ShoppingCart,
+  Users,
+  Settings,
+  Home,
+  Image,
+} from "lucide-react";
 
 const navItems = [
   {
@@ -19,6 +27,7 @@ const navItems = [
     icon: <ShoppingCart size={20} />,
   },
   { href: "/admin/users", label: "회원 관리", icon: <Users size={20} /> },
+  { href: "/admin/banners", label: "배너 관리", icon: <Image size={20} /> },
 ];
 
 export default function AdminLayout({

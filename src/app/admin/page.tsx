@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Box, ShoppingCart, Users } from "lucide-react";
+import { Box, Image, ShoppingCart, Users } from "lucide-react";
 
 const dashboardItems = [
   {
@@ -27,6 +27,12 @@ const dashboardItems = [
     label: "회원 관리",
     icon: <Users size={24} />,
     bg: "bg-gray-600 hover:bg-gray-700",
+  },
+  {
+    href: "/admin/banners",
+    label: "배너 관리",
+    icon: <Image size={24} />,
+    bg: "bg-yellow-600 hover:bg-yellow-700",
   },
 ];
 
