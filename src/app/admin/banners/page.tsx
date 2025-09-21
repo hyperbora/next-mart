@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useBannerActions } from "@/hooks/useBannerActions";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function BannersPage() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -24,7 +25,7 @@ export default function BannersPage() {
     }
   }, []);
 
-  if (loading) return <p>불러오는 중...</p>;
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-md">
@@ -98,7 +99,7 @@ export default function BannersPage() {
                     수정
                   </Link>
                   <button
-                    className="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+                    className="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600 cursor-pointer"
                     onClick={() => {
                       setDeleteId(banner.id);
                     }}
