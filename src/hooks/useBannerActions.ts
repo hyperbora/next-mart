@@ -1,7 +1,7 @@
 "use client";
 
 import { getApiErrorMesssage, getErrorMessage } from "@/utils";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 
 export interface Banner {
@@ -16,7 +16,7 @@ export function useBannerActions(initialBanners: Banner[] = []) {
   const [banners, setBanners] = useState<Banner[]>(initialBanners);
   const [loading, setLoading] = useState(true);
 
-  const fetchBanners = async () => {
+  const fetchBanners = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/admin/banners");
@@ -25,7 +25,7 @@ export function useBannerActions(initialBanners: Banner[] = []) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // ✅ 배너 토글 함수
   const handleToggle = async (banner: Banner) => {
@@ -85,6 +85,7 @@ export function useBannerActions(initialBanners: Banner[] = []) {
     setBanners,
     fetchBanners,
     loading,
+    setLoading,
     handleToggle,
     handleDelete,
   };
