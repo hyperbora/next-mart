@@ -15,14 +15,14 @@ export default function BannersPage() {
     useBannerActions();
 
   useEffect(() => {
-    try {
-      (async () => {
+    (async () => {
+      try {
         await fetchBanners();
-      })();
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-      console.error(err);
-    }
+      } catch (err) {
+        toast.error(getErrorMessage(err));
+        console.error(err);
+      }
+    })();
   }, []);
 
   if (loading) return <LoadingSpinner />;
@@ -81,7 +81,7 @@ export default function BannersPage() {
               <td className="p-2 border">
                 <button
                   onClick={() => handleToggle(banner)}
-                  className={`px-2 py-1 text-sm rounded ${
+                  className={`px-2 py-1 text-sm rounded cursor-pointer ${
                     banner.is_active
                       ? "bg-green-500 text-white hover:bg-green-600"
                       : "bg-gray-300 text-black hover:bg-gray-400"
