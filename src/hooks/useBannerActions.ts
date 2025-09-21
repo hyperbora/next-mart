@@ -1,5 +1,6 @@
 "use client";
 
+import { getErrorMessage } from "@/utils";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -31,6 +32,7 @@ export function useBannerActions(initialBanners: Banner[] = []) {
         `배너가 ${!currentStatus ? "활성화" : "비활성화"}되었습니다.`
       );
     } catch (error) {
+      console.error(getErrorMessage(error));
       toast.error("배너 상태 변경에 실패했습니다.");
     }
   };
@@ -49,6 +51,7 @@ export function useBannerActions(initialBanners: Banner[] = []) {
       setBanners((prev) => prev.filter((b) => b.id !== id));
       toast.success("배너가 삭제되었습니다.");
     } catch (error) {
+      console.error(getErrorMessage(error));
       toast.error("배너 삭제에 실패했습니다.");
     }
   };
