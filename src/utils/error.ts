@@ -12,6 +12,15 @@ export function getErrorMessage(error: unknown): string {
     return (error as { message: string }).message;
   }
 
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "error" in error &&
+    typeof (error as { error: unknown }).error === "string"
+  ) {
+    return (error as { error: string }).error;
+  }
+
   if (typeof error === "string") {
     return error;
   }
