@@ -23,7 +23,7 @@ export default function BannersPage() {
         console.error(err);
       }
     })();
-  }, []);
+  }, [fetchBanners]);
 
   if (loading) return <LoadingSpinner />;
 
