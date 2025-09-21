@@ -1,4 +1,7 @@
-export function getErrorMessage(error: unknown): string {
+export function getErrorMessage(
+  error: unknown,
+  defaultErrorMessage?: string
+): string {
   if (error instanceof Error) {
     return error.message;
   }
@@ -28,13 +31,13 @@ export function getErrorMessage(error: unknown): string {
   try {
     return JSON.stringify(error);
   } catch {
-    return "알 수 없는 오류가 발생했습니다.";
+    return defaultErrorMessage || "알 수 없는 오류가 발생했습니다.";
   }
 }
 
 export function getApiErrorMesssage(
   json: unknown,
-  defaultMessage: string
+  defaultErrorMessage?: string
 ): string {
   if (json instanceof Error) {
     return json.message;
@@ -48,5 +51,5 @@ export function getApiErrorMesssage(
   ) {
     return (json as { error: string }).error;
   }
-  return defaultMessage;
+  return defaultErrorMessage || "알 수 없는 오류가 발생했습니다.";
 }
