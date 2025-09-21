@@ -14,18 +14,29 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils";
 
 export default function MainBanner() {
-  const { banners, fetchBanners, loading } = useBannerActions();
+  const { banners, setBanners, loading, setLoading } = useBannerActions();
 
   useEffect(() => {
-    (async () => {
+    const fetchActiveBanners = async () => {
       try {
-        await fetchBanners();
+        setLoading(true);
+        const res = await fetch("/api/banners/active");
+        const data = await res.json();
+
+        if (res.ok) {
+          setBanners(data.banners || []);
+        } else {
+          throw new Error(data.error || "배너를 불러오지 못했습니다.");
+        }
       } catch (err) {
         toast.error(getErrorMessage(err));
         console.error(err);
+      } finally {
+        setLoading(false);
       }
-    })();
-  }, []);
+    };
+    fetchActiveBanners();
+  }, [setBanners, setLoading]);
 
   if (loading) {
     return <LoadingSpinner text="배너 불러오는 중..." />;
