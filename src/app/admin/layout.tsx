@@ -10,7 +10,7 @@ import {
   Users,
   Settings,
   Home,
-  Image,
+  Layout,
 } from "lucide-react";
 
 const navItems = [
@@ -27,7 +27,7 @@ const navItems = [
     icon: <ShoppingCart size={20} />,
   },
   { href: "/admin/users", label: "회원 관리", icon: <Users size={20} /> },
-  { href: "/admin/banners", label: "배너 관리", icon: <Image size={20} /> },
+  { href: "/admin/banners", label: "배너 관리", icon: <Layout size={20} /> },
 ];
 
 export default function AdminLayout({
