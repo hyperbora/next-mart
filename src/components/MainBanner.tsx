@@ -7,14 +7,38 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Link from "next/link";
 import LoadingImage from "./LoadingImage";
-
-const banners = [
-  { src: "https://picsum.photos/seed/product1/600/300", link: "/product/1" },
-  { src: "https://picsum.photos/seed/product2/600/300", link: "/product/2" },
-  { src: "https://picsum.photos/seed/product3/600/300", link: "/product/3" },
-];
+import { useBannerActions } from "@/hooks/useBannerActions";
+import LoadingSpinner from "./common/LoadingSpinner";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/utils";
 
 export default function MainBanner() {
+  const { banners, fetchBanners, loading } = useBannerActions();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await fetchBanners();
+      } catch (err) {
+        toast.error(getErrorMessage(err));
+        console.error(err);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner text="배너 불러오는 중..." />;
+  }
+
+  if (!banners.length) {
+    return (
+      <div className="flex items-center justify-center w-full h-64 md:h-96 bg-gray-100 rounded-lg">
+        <p className="text-gray-500">등록된 배너가 없습니다.</p>
+      </div>
+    );
+  }
+
   return (
     <div className={`w-full h-64 md:h-96 rounded-lg overflow-hidden`}>
       <Swiper
@@ -25,19 +49,29 @@ export default function MainBanner() {
         pagination={{ clickable: true }}
         className="w-full h-full"
       >
-        {banners.map((banner, idx) => (
-          <SwiperSlide key={idx} className="w-full h-full">
-            <Link href={banner.link}>
-              <LoadingImage
-                src={banner.src}
-                alt={`배너 ${idx + 1}`}
-                className="object-cover w-full h-full"
-                width={600}
-                height={300}
-              />
-            </Link>
-          </SwiperSlide>
-        ))}
+        {banners.map((banner) => {
+          const content = (
+            <LoadingImage
+              src={banner.image_url}
+              alt={banner.title || "배너"}
+              className="object-cover w-full h-full"
+              width={600}
+              height={300}
+            />
+          );
+
+          return (
+            <SwiperSlide key={banner.id} className="w-full h-full">
+              {banner.link_url ? (
+                <Link href={banner.link_url} target="_blank">
+                  {content}
+                </Link>
+              ) : (
+                content
+              )}
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );
