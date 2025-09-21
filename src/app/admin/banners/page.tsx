@@ -6,83 +6,23 @@ import LoadingImage from "@/components/LoadingImage";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils";
 import ConfirmModal from "@/components/ConfirmModal";
-
-interface Banner {
-  id: number;
-  title: string;
-  image_url: string;
-  link_url?: string;
-  is_active: boolean;
-  created_at: string;
-}
+import { useBannerActions } from "@/hooks/useBannerActions";
 
 export default function BannersPage() {
-  const [banners, setBanners] = useState<Banner[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [bannerDeleteModal, setBannerDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const { banners, fetchBanners, loading, handleToggle, handleDelete } =
+    useBannerActions();
 
   useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        const res = await fetch("/api/admin/banners");
-        const data = await res.json();
-
-        if (res.ok) {
-          setBanners(data.banners || []);
-        } else {
-          toast.error(data.error || "배너 데이터를 불러오지 못했습니다.");
-          console.error(data.error || "배너 데이터를 불러오지 못했습니다.");
-        }
-      } catch (err) {
-        toast.error(getErrorMessage(err));
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBanners();
+    try {
+      (async () => {
+        await fetchBanners();
+      })();
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      console.error(err);
+    }
   }, []);
-
-  const handleToggle = async (id: number, currentStatus: boolean) => {
-    try {
-      const res = await fetch(`/api/admin/banners/${id}/toggle`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_active: !currentStatus }),
-      });
-
-      if (res.ok) {
-        setBanners((prev) =>
-          prev.map((b) =>
-            b.id === id ? { ...b, is_active: !currentStatus } : b
-          )
-        );
-        toast.success("배너 활성화/비활성화 전환이 성공하였습니다.");
-      }
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-      console.error(getErrorMessage(error));
-    }
-  };
-
-  const handleDelete = async (id: number) => {
-    try {
-      const res = await fetch(`/api/admin/banners/${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        setBanners((prev) => prev.filter((b) => b.id !== id));
-        toast.success("배너가 삭제되었습니다.");
-      }
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-      console.error(getErrorMessage(error));
-    } finally {
-      setBannerDeleteModal(false);
-    }
-  };
 
   if (loading) return <p>불러오는 중...</p>;
 
@@ -139,7 +79,7 @@ export default function BannersPage() {
               </td>
               <td className="p-2 border">
                 <button
-                  onClick={() => handleToggle(banner.id, banner.is_active)}
+                  onClick={() => handleToggle(banner)}
                   className={`px-2 py-1 text-sm rounded ${
                     banner.is_active
                       ? "bg-green-500 text-white hover:bg-green-600"
@@ -157,22 +97,10 @@ export default function BannersPage() {
                   >
                     수정
                   </Link>
-                  {bannerDeleteModal && (
-                    <ConfirmModal
-                      title="배너 삭제"
-                      message="정말 삭제하시겠습니까?"
-                      onConfirm={() => {
-                        handleDelete(banner.id);
-                      }}
-                      onCancel={() => {
-                        setBannerDeleteModal(false);
-                      }}
-                    />
-                  )}
                   <button
                     className="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
                     onClick={() => {
-                      setBannerDeleteModal(true);
+                      setDeleteId(banner.id);
                     }}
                   >
                     삭제
@@ -183,6 +111,19 @@ export default function BannersPage() {
           ))}
         </tbody>
       </table>
+      {deleteId !== null && (
+        <ConfirmModal
+          title="배너 삭제"
+          message="정말 삭제하시겠습니까?"
+          onConfirm={() => {
+            handleDelete(deleteId);
+            setDeleteId(null);
+          }}
+          onCancel={() => {
+            setDeleteId(null);
+          }}
+        />
+      )}
     </div>
   );
 }

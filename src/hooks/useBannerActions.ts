@@ -8,14 +8,28 @@ export interface Banner {
   id: number;
   title: string;
   image_url: string;
+  link_url?: string;
   is_active: boolean;
 }
 
 export function useBannerActions(initialBanners: Banner[] = []) {
   const [banners, setBanners] = useState<Banner[]>(initialBanners);
+  const [loading, setLoading] = useState(true);
+
+  const fetchBanners = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/banners");
+      const data = await res.json();
+      setBanners(data.banners || []);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ✅ 배너 토글 함수
-  const handleToggle = async (id: number, currentStatus: boolean) => {
+  const handleToggle = async (banner: Banner) => {
+    const { id, is_active: currentStatus } = banner;
     try {
       const res = await fetch(`/api/admin/banners/${id}/toggle`, {
         method: "PATCH",
@@ -69,6 +83,8 @@ export function useBannerActions(initialBanners: Banner[] = []) {
   return {
     banners,
     setBanners,
+    fetchBanners,
+    loading,
     handleToggle,
     handleDelete,
   };
