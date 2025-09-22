@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import AuthListener from "@/components/AuthListener";
 import { Toaster } from "react-hot-toast";
 import AuthCartSync from "@/components/AuthCartSync";
+import ProgressBar from "@/components/ProgressBar";
 
 export const metadata = {
   title: "Next Mart",
@@ -26,6 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* 메인 컨텐츠 */}
         <main className="flex-1 px-2 bg-gray-50 sm:px-4 md:px-6">
+          <ProgressBar />
           {children}
         </main>
 
