@@ -47,7 +47,9 @@ export default function ProductsPage() {
 
   return (
     <div className="max-w-6xl p-6 mx-auto">
-      <h1 className="mb-4 text-xl font-bold">검색 결과: "{query}"</h1>
+      <h1 className="mb-4 text-xl font-bold">
+        검색 결과: &ldquo;{query}&rdquo;
+      </h1>
 
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
