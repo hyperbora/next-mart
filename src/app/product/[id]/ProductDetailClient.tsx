@@ -5,15 +5,10 @@ import LoadingImage from "@/components/LoadingImage";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils";
 import { useAppStore } from "@/store/useAppStore";
+import { type Product } from "@/types";
 
 interface ProductDetailClientProps {
-  product: {
-    id: number;
-    title: string;
-    price: number;
-    image_url?: string;
-    description?: string;
-  };
+  product: Product;
 }
 
 export default function ProductDetailClient({

@@ -1,15 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { createServerClient } from "@/utils/supabase/server";
-
-export interface Product {
-  id: number;
-  title: string;
-  price: number;
-  image_url?: string;
-  description?: string;
-  inserted_at?: string;
-  updated_at?: string;
-}
+import { type Product } from "@/types";
 
 // 전체 상품 조회
 export async function getAllProducts(): Promise<Product[]> {

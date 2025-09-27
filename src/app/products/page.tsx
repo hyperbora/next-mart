@@ -6,13 +6,7 @@ import toast from "react-hot-toast";
 import LoadingImage from "@/components/LoadingImage";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { getErrorMessage } from "@/utils";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  image_url?: string;
-}
+import { type Product } from "@/types";
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();

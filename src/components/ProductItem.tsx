@@ -1,19 +1,8 @@
 import Link from "next/link";
 import LoadingImage from "./LoadingImage";
+import { type Product } from "@/types";
 
-interface ProductItemProps {
-  id: number;
-  title: string;
-  price: number;
-  image_url?: string;
-}
-
-export default function ProductItem({
-  id,
-  title,
-  price,
-  image_url,
-}: ProductItemProps) {
+export default function ProductItem({ id, title, price, image_url }: Product) {
   return (
     <Link
       href={`/product/${id}`}

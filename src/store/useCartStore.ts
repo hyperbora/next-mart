@@ -1,10 +1,5 @@
 import { create } from "zustand";
-
-interface Product {
-  title: string;
-  price: number;
-  image_url: string;
-}
+import { Product } from "@/types";
 
 interface CartItem {
   product_id: number;
@@ -55,4 +50,4 @@ export const useCartStore = create<CartStore>((set, get) => ({
   },
 }));
 
-export type { Product, CartItem };
+export type { CartItem };
