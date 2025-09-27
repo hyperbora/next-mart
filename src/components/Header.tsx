@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import ConfirmModal from "./ConfirmModal";
 import { getErrorMessage } from "@/utils";
+import MainSearch from "./MainSearch";
 
 export default function Header() {
   const session = useAppStore((state) => state.session);
@@ -154,11 +155,7 @@ export default function Header() {
         <div className="text-2xl font-bold text-green-600">
           <Link href="/">NMart</Link>
         </div>
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요"
-          className="w-40 px-3 py-2 border rounded-md sm:w-64 md:w-96"
-        />
+        <MainSearch />
         <nav className="items-center hidden space-x-4 text-gray-700 md:flex">
           {menus}
         </nav>
