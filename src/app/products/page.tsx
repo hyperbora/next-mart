@@ -7,9 +7,18 @@ import LoadingImage from "@/components/LoadingImage";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { getErrorMessage } from "@/utils";
 import { type Product } from "@/types";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 
-export default function ProductsPage() {
+export default function ProductsPageWithSuspense() {
+  return (
+    <Suspense
+      fallback={<p>검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>}
+    >
+      <ProductsPage />
+    </Suspense>
+  );
+}
+
+function ProductsPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
@@ -41,42 +50,40 @@ export default function ProductsPage() {
   }, [query]);
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <div className="max-w-6xl p-6 mx-auto">
-        <h1 className="mb-4 text-xl font-bold">
-          검색 결과: &ldquo;{query}&rdquo;
-        </h1>
+    <div className="max-w-6xl p-6 mx-auto">
+      <h1 className="mb-4 text-xl font-bold">
+        검색 결과: &ldquo;{query}&rdquo;
+      </h1>
 
-        {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Array.from({ length: 8 }).map((_, idx) => (
-              <ProductCardSkeleton key={idx} />
-            ))}
-          </div>
-        ) : products.length === 0 ? (
-          <p>검색 결과가 없습니다.</p>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <div key={product.id} className="p-2 border rounded">
-                {product.image_url && (
-                  <LoadingImage
-                    src={product.image_url}
-                    alt={product.title}
-                    className="object-cover w-full h-32"
-                    width={300}
-                    height={300}
-                  />
-                )}
-                <p className="mt-2 text-sm line-clamp-2">{product.title}</p>
-                <p className="font-bold text-green-600">
-                  ₩{product.price.toLocaleString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </Suspense>
+      {loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <ProductCardSkeleton key={idx} />
+          ))}
+        </div>
+      ) : products.length === 0 ? (
+        <p>검색 결과가 없습니다.</p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {products.map((product) => (
+            <div key={product.id} className="p-2 border rounded">
+              {product.image_url && (
+                <LoadingImage
+                  src={product.image_url}
+                  alt={product.title}
+                  className="object-cover w-full h-32"
+                  width={300}
+                  height={300}
+                />
+              )}
+              <p className="mt-2 text-sm line-clamp-2">{product.title}</p>
+              <p className="font-bold text-green-600">
+                ₩{product.price.toLocaleString()}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
