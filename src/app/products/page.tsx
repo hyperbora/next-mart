@@ -3,7 +3,6 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import LoadingImage from "@/components/LoadingImage";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { getErrorMessage } from "@/utils";
 import { type Product } from "@/types";
