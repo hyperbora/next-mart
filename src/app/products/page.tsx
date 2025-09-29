@@ -8,6 +8,7 @@ import { getErrorMessage } from "@/utils";
 import { type Product } from "@/types";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SearchResultProduct from "@/components/SearchResultProduct";
+import SortButtons from "@/components/SortButtons";
 
 export default function ProductsPageWithSuspense() {
   return (
@@ -50,6 +51,7 @@ function ProductsPage() {
 
   return (
     <div className="max-w-6xl p-6 mx-auto">
+      <SortButtons />
       <h1 className="mb-4 text-xl font-bold">
         {loading
           ? "검색 중..."
