@@ -21,6 +21,7 @@ export default function ProductsPageWithSuspense() {
 function ProductsPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
+  const sort = searchParams.get("sort") || "inserted_at";
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,9 @@ function ProductsPage() {
       setLoading(true);
       try {
         const res = await fetch(
-          `/api/products/search?query=${encodeURIComponent(query)}`
+          `/api/products/search?query=${encodeURIComponent(
+            query
+          )}&sort=${encodeURIComponent(sort)}`
         );
         const data = await res.json();
         if (res.ok) {

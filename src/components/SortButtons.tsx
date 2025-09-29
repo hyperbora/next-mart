@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import LoadingSpinner from "./common/LoadingSpinner";
 
 const SORT_OPTIONS = [
-  { label: "최신순", value: "created_desc", icon: <Clock size={16} /> },
+  { label: "최신순", value: "inserted_at", icon: <Clock size={16} /> },
   { label: "가격 낮은순", value: "price_asc", icon: <ArrowUp size={16} /> },
   { label: "가격 높은순", value: "price_desc", icon: <ArrowDown size={16} /> },
 ];
@@ -23,7 +23,7 @@ function SortButtonsComponent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const currentSort = searchParams.get("sort") || "created_desc";
+  const currentSort = searchParams.get("sort") || "inserted_at";
 
   const handleSort = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
