@@ -7,12 +7,11 @@ import LoadingImage from "@/components/LoadingImage";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { getErrorMessage } from "@/utils";
 import { type Product } from "@/types";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function ProductsPageWithSuspense() {
   return (
-    <Suspense
-      fallback={<p>검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>}
-    >
+    <Suspense fallback={<LoadingSpinner />}>
       <ProductsPage />
     </Suspense>
   );
