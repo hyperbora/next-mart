@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getErrorMessage } from "@/utils";
 import { createServerClient } from "@/utils/supabase/server";
-import { createProduct, Product } from "@/lib/productApi";
+import { createProduct } from "@/lib/productApi";
 import { checkAdmin } from "@/utils/auth";
+import { Product } from "@/types";
 
 export async function POST(req: Request) {
   try {
