@@ -23,6 +23,7 @@ export default function ProductDetailClient({
         product_id: product.id,
         quantity: 1,
         product: {
+          id: product.id,
           title: product.title,
           price: product.price,
           image_url: product.image_url || "/file.svg",
