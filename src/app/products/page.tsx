@@ -51,7 +51,9 @@ function ProductsPage() {
   return (
     <div className="max-w-6xl p-6 mx-auto">
       <h1 className="mb-4 text-xl font-bold">
-        검색 결과: &ldquo;{query}&rdquo;
+        {loading
+          ? "검색 중..."
+          : `검색 결과: “${query}” / 전체 ${products.length}개의 상품이 검색 되었습니다.`}
       </h1>
 
       {loading ? (
