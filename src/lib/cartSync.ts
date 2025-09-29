@@ -1,7 +1,8 @@
 import { upsertCartItem, deleteCartItem, getCartItem } from "@/lib/cartApi";
 import { useAppStore } from "@/store/useAppStore";
 import { useCartStore } from "@/store/useCartStore";
-import { type Product, type CartItem } from "@/store/useCartStore";
+import { type CartItem } from "@/store/useCartStore";
+import { type Product } from "@/types";
 
 export function useCartSync() {
   const session = useAppStore((state) => state.session);

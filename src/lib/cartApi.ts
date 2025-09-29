@@ -5,7 +5,9 @@ export async function getCartItemsByUser(userId: string) {
   const supabase = createClient();
   const cartItemsWithProductQuery = supabase
     .from("cart_items")
-    .select("product_id, quantity, products(title, price, image_url)")
+    .select(
+      "product_id, quantity, products(id, title, price, image_url, description)"
+    )
     .eq("user_id", userId);
 
   type CartItemsWithProduct = QueryData<typeof cartItemsWithProductQuery>;
