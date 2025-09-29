@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import ConfirmModal from "./ConfirmModal";
 import { getErrorMessage } from "@/utils";
-import MainSearch from "./MainSearch";
+import MainSearchForm from "./MainSearchForm";
 
 export default function Header() {
   const session = useAppStore((state) => state.session);
@@ -155,7 +155,7 @@ export default function Header() {
         <div className="text-2xl font-bold text-green-600">
           <Link href="/">NMart</Link>
         </div>
-        <MainSearch />
+        <MainSearchForm />
         <nav className="items-center hidden space-x-4 text-gray-700 md:flex">
           {menus}
         </nav>
