@@ -8,6 +8,7 @@ import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { getErrorMessage } from "@/utils";
 import { type Product } from "@/types";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import SearchResultProduct from "@/components/SearchResultProduct";
 
 export default function ProductsPageWithSuspense() {
   return (
@@ -65,21 +66,7 @@ function ProductsPage() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {products.map((product) => (
-            <div key={product.id} className="p-2 border rounded">
-              {product.image_url && (
-                <LoadingImage
-                  src={product.image_url}
-                  alt={product.title}
-                  className="object-cover w-full h-32"
-                  width={300}
-                  height={300}
-                />
-              )}
-              <p className="mt-2 text-sm line-clamp-2">{product.title}</p>
-              <p className="font-bold text-green-600">
-                ₩{product.price.toLocaleString()}
-              </p>
-            </div>
+            <SearchResultProduct key={product.id} {...product} />
           ))}
         </div>
       )}
